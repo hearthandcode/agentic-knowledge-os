@@ -1,0 +1,52 @@
+{
+  "schema": "akos.operating-policy.v1",
+  "policy_id": "akos.public.extended-mind-operating-policy",
+  "version": "0.3.0-alpha.1",
+  "semantic_orientation": {
+    "meaning_authority": "human-or-named-source-owner",
+    "canonical_meaning_default": null,
+    "invariants": [
+      "literal material remains separately addressable",
+      "normalization is labeled as a proposal",
+      "hypotheses retain supporting and disconfirming evidence",
+      "natural cardinality is preferred over padded symmetry"
+    ],
+    "forbidden_inferences": ["diagnosis", "stable personal trait", "preference", "capability", "consent", "authority"],
+    "modes": [
+      {"id": "literal", "use": "retrieval or preservation", "expansion": "none"},
+      {"id": "minimal", "use": "default orientation", "expansion": "two-to-four useful dimensions plus one boundary"},
+      {"id": "balanced", "use": "multi-perspective synthesis", "expansion": "four-to-eight dimensions with omissions and uncertainty"},
+      {"id": "expansive", "use": "explicit human request only", "expansion": "bounded broad exploration with pruning and no acceptance implication"},
+      {"id": "contrastive", "use": "compare alternatives", "expansion": "shared dimensions, disagreements, and disconfirming evidence"},
+      {"id": "no-expansion", "use": "sensitive or exact-source work", "expansion": "literal source and necessary diagnostics only"}
+    ]
+  },
+  "operational_intelligence": {
+    "purpose": "Compare forms, states, transitions, loss, drift, gates, and return readiness without selecting authority or truth.",
+    "layers": [
+      {"id": "L1", "name": "semantic", "owner": "human-or-named-source-owner", "effect": "meaning and policy"},
+      {"id": "L2", "name": "operational", "owner": "portable-contract", "effect": "typed transformations and guarded state"},
+      {"id": "L3", "name": "host-projection", "owner": "host-adapter", "effect": "loss-visible projection with no-write-back"}
+    ],
+    "cannot_select": ["provider", "profile activation", "semantic truth", "human decision", "filesystem authority", "publication", "runtime"],
+    "projection_requirements": ["source identity", "source digest or revision when available", "transformation identity", "loss description", "staleness or drift", "review state", "no-write-back"],
+    "rehydration_rule": "Consequential dependence requires direct source reinspection when freshness, completeness, or digest identity is uncertain."
+  },
+  "governance": {
+    "normative_terms": {
+      "MUST": "required predicate",
+      "MUST_NOT": "prohibition",
+      "SHOULD": "strong default whose exception must be explained",
+      "MAY": "permission only inside stronger law",
+      "HOLD": "stop the dependent action and preserve evidence",
+      "UNKNOWN": "unresolved value that cannot become permission"
+    },
+    "precedence": ["current human instruction", "safety consent privacy and authorship", "named direct source", "workspace constitution", "narrower local law", "proposal or projection"],
+    "independent_gates": ["source-intake", "semantic-acceptance", "artifact-acceptance", "local-apply", "host-activation", "external-effect"],
+    "fail_closed_on": ["authority", "owner", "source identity", "sensitivity", "route", "permission", "cost", "irreversibility", "transition"],
+    "validation_limit": "A check establishes only its declared predicate; it does not establish acceptance, meaning, safety, usefulness, or runtime efficacy."
+  },
+  "source_relation": "Public adaptation with deliberate loss; private source bodies and personal context are excluded and no write-back is permitted.",
+  "review_status": "review-required",
+  "verified": false
+}

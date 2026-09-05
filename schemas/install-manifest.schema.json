@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/install-manifest.v2.schema.json",
+  "title": "Agentic Knowledge OS install manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "manifest_digest", "source_version", "plan_id", "workspace_root", "host", "profiles", "owned_files", "created_directories", "review_status", "verified", "live_host_activation"],
+  "properties": {
+    "schema": {"const": "akos.install-manifest.v2"},
+    "manifest_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "source_version": {"const": "0.3.0-alpha.1"},
+    "plan_id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "workspace_root": {"type": "string", "minLength": 2},
+    "host": {"enum": ["neutral", "hermes", "pi", "exocore"]},
+    "profiles": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"type": "string", "pattern": "^akos\\.core8\\.[a-z][a-z-]+$"}, "uniqueItems": true},
+    "owned_files": {
+      "type": "object",
+      "minProperties": 8,
+      "maxProperties": 15,
+      "propertyNames": {"pattern": "^(AGENTS\\.md|brain\\.json|\\.akos/(core8|type-kernel|operating-policy)\\.json|\\.akos/ORIENTATION\\.md|\\.akos/host/(neutral|hermes|pi|exocore)\\.json|\\.akos/profiles/[a-z][a-z-]+\\.md)$"},
+      "additionalProperties": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+    },
+    "created_directories": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "sources"},
+        {"const": "knowledge"},
+        {"const": "projects"},
+        {"const": "workflows"},
+        {"const": "decisions"},
+        {"const": "evidence"},
+        {"const": "receipts"},
+        {"const": "archive"},
+        {"const": ".akos"},
+        {"const": ".akos/host"},
+        {"const": ".akos/profiles"}
+      ],
+      "items": false,
+      "minItems": 11,
+      "maxItems": 11
+    },
+    "review_status": {"const": "review-required"},
+    "verified": {"const": false},
+    "live_host_activation": {"const": "none"}
+  }
+}

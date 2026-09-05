@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77,<82"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-knowledge-os"
+version = "0.3.0a1"
+description = "Host-neutral, local-first bootstrap contracts for a governed agentic knowledge workspace"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "PolyForm-Noncommercial-1.0.0"
+authors = [
+  {name = "Scott Rallya and Hearth & Code"},
+]
+dependencies = []
+
+[project.scripts]
+akos = "agentic_knowledge_os.cli:main"
+
+[tool.setuptools.package-data]
+agentic_knowledge_os = ["data/*.json", "data/*.md"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

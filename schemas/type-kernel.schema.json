@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/type-kernel.v1.schema.json",
+  "title": "Agentic Knowledge OS closed type kernel v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "kernel_id", "version", "closed_world", "unknown_type_behavior", "shared_kernel", "epistemic_classes", "types", "relations", "work_item", "rules", "review_status", "verified"],
+  "properties": {
+    "schema": {"const": "akos.type-kernel.v1"},
+    "kernel_id": {"const": "akos.public.type-kernel"},
+    "version": {"type": "string"},
+    "closed_world": {"const": true},
+    "unknown_type_behavior": {"const": "hold-dependent-transformation"},
+    "shared_kernel": {"const": ["SourceBinding", "Diagnostic", "ReturnEnvelope"]},
+    "epistemic_classes": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "types": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "owner", "kind", "nullable", "cardinality", "description"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z][A-Za-z]+$"},
+          "owner": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["input", "output", "record", "envelope", "authority"]},
+          "nullable": {"const": false},
+          "cardinality": {"enum": ["exactly-one", "zero-or-one", "one-or-more", "zero-or-more"]},
+          "description": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "domain", "range", "directional", "transitive", "evidence_required", "cycle_policy"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z-]+$"},
+          "domain": {"type": "string"},
+          "range": {"type": "string"},
+          "directional": {"type": "boolean"},
+          "transitive": {"type": "boolean"},
+          "evidence_required": {"type": "boolean"},
+          "cycle_policy": {"enum": ["forbid", "allow-attributed"]}
+        }
+      }
+    },
+    "work_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["initial", "states", "terminal", "happy_path", "unknown_transition"],
+      "properties": {
+        "initial": {"const": "orient"},
+        "states": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "terminal": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "happy_path": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "unknown_transition": {"const": "hold"}
+      }
+    },
+    "rules": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "review_status": {"const": "review-required"},
+    "verified": {"const": false}
+  }
+}

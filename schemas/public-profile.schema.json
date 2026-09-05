@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/public-profile.v2.schema.json",
+  "title": "Agentic Knowledge OS public profile v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "label", "mandate", "attention_signal", "routing_question", "admission_test", "transformation", "owned_outcome", "non_triggers", "boundaries", "falsifier", "handoff_to", "default_enabled", "authority_class", "verified"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^akos\\.core8\\.[a-z][a-z-]+$"},
+    "label": {"type": "string", "minLength": 1},
+    "mandate": {"type": "string", "minLength": 1},
+    "attention_signal": {"type": "string", "minLength": 1},
+    "routing_question": {"type": "string", "minLength": 1},
+    "admission_test": {"type": "string", "minLength": 1},
+    "transformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "domain", "codomain", "preconditions", "invariants", "failure_returns"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^akos\\.transform\\.[a-z][a-z-]+\\.v[0-9]+$"},
+        "domain": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "codomain": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "preconditions": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "invariants": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "failure_returns": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "owned_outcome": {"type": "string", "minLength": 1},
+    "non_triggers": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "boundaries": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "falsifier": {"type": "string", "minLength": 1},
+    "handoff_to": {"type": "array", "items": {"type": "string", "pattern": "^akos\\.core8\\.[a-z][a-z-]+$"}, "uniqueItems": true},
+    "default_enabled": {"const": false},
+    "authority_class": {"const": "advisory-template"},
+    "verified": {"const": false}
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/operation-receipt.v1.schema.json",
+  "title": "Agentic Knowledge OS operation receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "operation", "status", "workspace_root", "plan_id", "manifest_digest", "changed_paths", "preserved_paths", "findings", "effects", "verified"],
+  "properties": {
+    "schema": {"const": "akos.operation-receipt.v1"},
+    "operation": {"enum": ["apply", "verify", "uninstall", "rollback"]},
+    "status": {"enum": ["applied", "already-applied", "clear", "blocked", "removed"]},
+    "workspace_root": {"type": "string", "minLength": 1},
+    "plan_id": {"anyOf": [{"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, {"type": "null"}]},
+    "manifest_digest": {"anyOf": [{"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, {"type": "null"}]},
+    "changed_paths": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "preserved_paths": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "findings": {"type": "array", "items": {"type": "string"}},
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workspace_write", "host_activation", "provider_use", "network_use"],
+      "properties": {
+        "workspace_write": {"enum": ["performed", "none"]},
+        "host_activation": {"const": "not-performed"},
+        "provider_use": {"const": "not-performed"},
+        "network_use": {"const": "not-performed"}
+      }
+    },
+    "verified": {"const": false}
+  }
+}

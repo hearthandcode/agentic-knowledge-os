@@ -1,0 +1,39 @@
+{
+  "neutral": {
+    "schema": "akos.host-adapter.v1",
+    "host": "neutral",
+    "status": "source-candidate",
+    "instruction_surface": "AGENTS.md",
+    "projection_loss": [],
+    "runtime_effect": "none",
+    "verified": false
+  },
+  "hermes": {
+    "schema": "akos.host-adapter.v1",
+    "host": "hermes",
+    "status": "source-compatible-live-untested",
+    "instruction_surface": "AGENTS.md directory chain",
+    "projection_loss": ["profile installation", "plugin enablement", "provider configuration", "gateway lifecycle"],
+    "context_rule": "Do not emit .hermes.md alongside AGENTS.md by default because the former wins project-context discovery.",
+    "runtime_effect": "held",
+    "verified": false
+  },
+  "pi": {
+    "schema": "akos.host-adapter.v1",
+    "host": "pi",
+    "status": "contract-only-live-untested",
+    "instruction_surface": "explicit profile-pack extension and skill paths",
+    "projection_loss": ["extension registration", "host configuration", "runtime compatibility proof"],
+    "runtime_effect": "held",
+    "verified": false
+  },
+  "exocore": {
+    "schema": "akos.host-adapter.v1",
+    "host": "exocore",
+    "status": "held-interface",
+    "instruction_surface": "future accepted Exocore-owned profile and workflow contracts",
+    "projection_loss": ["runtime adapter", "capability binding", "receipt integration"],
+    "runtime_effect": "held",
+    "verified": false
+  }
+}

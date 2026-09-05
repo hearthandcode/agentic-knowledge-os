@@ -1,0 +1,15 @@
+{
+  "schema": "akos.brain.v1",
+  "name": "Invalid Brain",
+  "workspace_root": "/workspace/invalid-brain",
+  "host": "neutral",
+  "profiles": ["akos.core8.unbounded-autocrat"],
+  "governance": {
+    "local_first": true,
+    "no_write_back": true,
+    "human_effect_gates": true,
+    "provider_neutral": true
+  },
+  "review_status": "review-required",
+  "verified": false
+}
