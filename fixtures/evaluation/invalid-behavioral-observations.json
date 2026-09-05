@@ -1,0 +1,12 @@
+{
+  "schema": "akos.behavioral-observations.v1",
+  "experiment_id": "akos.behavioral.core8.matched-v1",
+  "plan_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "measurement_class": "synthetic",
+  "runner": "fixture-replay",
+  "host": "neutral",
+  "model": null,
+  "records": [],
+  "review_status": "review-required",
+  "verified": false
+}

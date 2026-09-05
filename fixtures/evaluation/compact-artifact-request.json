@@ -1,0 +1,30 @@
+{
+  "schema": "akos.artifact-request.v1",
+  "task": "Prepare a JSON field crosswalk converting the provided duration values from milliseconds to seconds. Preserve null as unassessed. Include only the fields in the consumer schema.",
+  "artifact_path": "mappings/duration.json",
+  "profile_id": "akos.core8.knowledge-engineer",
+  "audience": "public",
+  "max_attempts": 2,
+  "content_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["source_field", "target_field", "factor", "mapped_values", "null_policy"],
+    "properties": {
+      "source_field": {"type": "string", "const": "duration_ms"},
+      "target_field": {"type": "string", "const": "duration_seconds"},
+      "factor": {"type": "number", "const": 0.001},
+      "mapped_values": {"type": "array", "items": {"type": ["number", "null"]}, "minItems": 3, "maxItems": 3},
+      "null_policy": {"type": "string", "const": "preserve"}
+    }
+  },
+  "sources": [
+    {"id": "duration-input", "availability": "available", "sensitivity": "public", "authority": "source", "data": {"values": [1250, null, 4000]}},
+    {"id": "conversion-decision", "availability": "available", "sensitivity": "public", "authority": "decision", "data": {"factor": 0.001, "null_policy": "preserve"}}
+  ],
+  "checks": [
+    {"id": "first-conversion", "target": "/mapped_values/0", "source_id": "duration-input", "source_pointer": "/values/0", "operation": "scale", "factor": 0.001},
+    {"id": "null-preserved", "target": "/mapped_values/1", "source_id": "duration-input", "source_pointer": "/values/1", "operation": "copy"},
+    {"id": "last-conversion", "target": "/mapped_values/2", "source_id": "duration-input", "source_pointer": "/values/2", "operation": "scale", "factor": 0.001},
+    {"id": "factor-source", "target": "/factor", "source_id": "conversion-decision", "source_pointer": "/factor", "operation": "copy"}
+  ]
+}

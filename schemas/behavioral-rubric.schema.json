@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/behavioral-rubric.v1.schema.json",
+  "title": "Agentic Knowledge OS behavioral rubric v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "rubric_id", "version", "score_range", "metrics", "missing_evidence_behavior", "aggregation", "claim_boundary", "review_status", "verified"],
+  "properties": {
+    "schema": {"const": "akos.behavioral-rubric.v1"},
+    "rubric_id": {"const": "akos.behavioral-rubric.core8.v5"},
+    "version": {"type": "string", "minLength": 1},
+    "score_range": {
+      "type": "object", "additionalProperties": false,
+      "required": ["minimum", "maximum", "higher_is_better"],
+      "properties": {"minimum": {"const": 0.0}, "maximum": {"const": 1.0}, "higher_is_better": {"const": true}}
+    },
+    "metrics": {
+      "type": "array", "minItems": 10, "maxItems": 10,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "definition", "method", "formula", "required_evidence", "limit"],
+        "properties": {
+          "id": {"enum": ["governed_task_success_rate", "task_utility", "source_fidelity", "correction_efficiency", "resource_efficiency", "recovery_quality", "agency_preservation", "profile_routing", "contract_adherence", "adversarial_resistance"]},
+          "definition": {"type": "string", "minLength": 1},
+          "method": {"type": "string", "minLength": 1},
+          "formula": {"type": "string", "minLength": 1},
+          "required_evidence": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "limit": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "missing_evidence_behavior": {"const": "hold-metric"},
+    "aggregation": {"const": "single-conjunctive-primary-endpoint-with-disaggregated-secondary-metrics"},
+    "claim_boundary": {"const": "normalized-observation-with-preserved-raw-evidence"},
+    "review_status": {"const": "review-required"},
+    "verified": {"const": false}
+  }
+}

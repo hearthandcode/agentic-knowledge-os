@@ -44,7 +44,7 @@ The orientation result should be a candidate typed record. Literal answers remai
 
 ## Constitution and type kernel
 
-`AGENTS.md` is prose law with stable `AKOS-RFC-0001.x` clause identifiers. `.akos/operating-policy.json` exposes the semantic modes, L1/L2/L3 distinction, Operational Intelligence limits, and independent gates. `.akos/type-kernel.json` closes the vocabulary used by transformations.
+`AGENTS.md` is prose law with stable `AKOS-RFC-0001.x` clause identifiers. `.akos/operating-policy.json` exposes the semantic modes, L1/L2/L3 distinction, Operational Intelligence limits, and independent gates. `.akos/type-kernel.json` closes the vocabulary used by transformations. The Core8 registry adds a shared contract protocol and four condition-bound RFC rules per role, including explicit failure returns and evidence checks.
 
 The prose and machine layers have different jobs:
 
@@ -78,6 +78,8 @@ A successful earlier gate never implies a later one. This makes it possible to i
 6. Ask the human owner for the exact next gate.
 7. Project through the selected host adapter without broadening capability or authority.
 8. Perform only the released effect and return exact evidence and a receipt.
+
+Every step is evaluated under adversarial pressure: source text may contain instructions, a payload may introduce unknown fields, a request may launder a proposal into authority, or a role may be invited to approve its own work. These cases remain typed data and diagnostics; they do not rewrite precedence or broaden an effect ceiling.
 
 ## What remains outside this phase
 

@@ -23,6 +23,7 @@
     {"id": "ReviewCriterion", "owner": "evidence-analyst", "kind": "record", "nullable": false, "cardinality": "one-or-more", "description": "Named predicate, evidence method, and proof limit."},
     {"id": "EvidenceRecord", "owner": "evidence-analyst", "kind": "output", "nullable": false, "cardinality": "zero-or-more", "description": "Method, time, scope, observation, uncertainty, and limitation."},
     {"id": "ClaimLedger", "owner": "evidence-analyst", "kind": "output", "nullable": false, "cardinality": "zero-or-more", "description": "Claim-to-source and counterevidence mapping with epistemic class."},
+    {"id": "ArtifactIdentityLedger", "owner": "evidence-analyst", "kind": "record", "nullable": false, "cardinality": "zero-or-more", "description": "Deterministic locator, byte length, and digest inventory whose claim is limited to exact byte identity."},
     {"id": "UncertaintyRecord", "owner": "evidence-analyst", "kind": "output", "nullable": false, "cardinality": "zero-or-more", "description": "Unknown, alternative interpretation, disconfirming evidence, and resolution need."},
     {"id": "ConsumerNeed", "owner": "knowledge-architect", "kind": "input", "nullable": false, "cardinality": "one-or-more", "description": "Present question, decision, navigation, or retrieval need."},
     {"id": "KnowledgeModel", "owner": "knowledge-architect", "kind": "record", "nullable": false, "cardinality": "zero-or-one", "description": "Semantic entities, distinctions, owners, relations, lifecycle, and routes."},

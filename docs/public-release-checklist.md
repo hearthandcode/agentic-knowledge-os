@@ -10,7 +10,7 @@
 - Description: `A local-first, governed operating system for user-owned extended minds across agent harnesses.`
 - Topics: `agentic-ai`, `knowledge-management`, `hermes-agent`, `ai-agents`, `local-first`, `provenance`, `human-in-the-loop`
 
-This name matches the Python package and local repository and sits alongside `hearthandcode/hermes-knowledge-engineering-plugins` without implying that Hermes owns the portable system. The repository was created by the human owner, and local Git currently records baseline commit `42a31c9` on `main` aligned with `origin/main`. Remote visibility, rendered contents, and release state must still be observed directly before claiming publication.
+This name matches the Python package and local repository and sits alongside `hearthandcode/hermes-knowledge-engineering-plugins` without implying that Hermes owns the portable system. Historical commits include initial source `42a31c9` and native packages `ce6efca`. Resolve the current Git revision directly rather than treating these historical checkpoints as current HEAD. Remote visibility, rendered contents, and release state must still be observed directly before claiming a tagged release or announcement.
 
 ## Content and rights review
 
@@ -39,7 +39,12 @@ The baseline push exists. This documentation update does not authorize staging, 
 
 ## Candidate contents
 
+- v7 compact-contract report and digest-indexed public evidence archive, with offline raw-response replay and explicit development-study limitations;
+
 - provider-free workspace lifecycle evaluation;
+- governance-scorer mutation audit and synthetic matched-comparison canary;
+- preregistered structured role-vocabulary, `AGENTS.md`-only, and full-AKOS behavioral experiment with independent metrics;
+- optional secret-free Promptfoo configs for MiniMax-M3 API-key and official `mmx` OAuth routes;
 - public Core8 fleet and RFC-style extended-mind constitution;
 - deterministic native Hermes Agent Plugins v1 package generation;
 - deterministic native Pi skill and prompt package generation;
@@ -55,3 +60,7 @@ The baseline push exists. This documentation update does not authorize staging, 
 - identify the exact observed checks when useful: Hermes Agent v0.21.0 package-doctor discovery and Pi v0.83.0 isolated local installation;
 - disclose AI assistance where appropriate;
 - invite review of boundaries and portability rather than claiming intelligence, safety, or efficacy.
+- describe a 1.0 mutation-detection score as evidence about the scorer's declared probes, never as an AKOS effectiveness score;
+- do not publish synthetic behavioral deltas as observed model results;
+- do not call a partial Promptfoo metric vector an intelligence score or fill unavailable correction and recovery evidence with inferred values;
+- publish observed metric vectors, regressions, uncertainty, hard gates, task inventory, repetitions, and raw-evidence locators without a compensating composite score.

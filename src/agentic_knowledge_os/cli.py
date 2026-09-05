@@ -8,6 +8,16 @@ from pathlib import Path
 from typing import Sequence
 
 from .compiler import build_plan, compile_bundle, core8_profiles, operating_policy, type_kernel
+from .artifact_contract import compile_request, evaluate_attempts, strict_json
+from .evaluation import (
+    audit_governance_scorer,
+    benchmark_suite,
+    behavioral_experiment_plan,
+    behavioral_rubric,
+    score_behavioral_experiment,
+    score_trace_set,
+    synthetic_behavioral_observations,
+)
 from .host_packages import (
     build_host_package_plan,
     compile_host_package,
@@ -43,6 +53,22 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("profiles", help="List the public Core8 profile registry")
     subparsers.add_parser("policy", help="Print the semantic, operational-intelligence, and governance policy")
     subparsers.add_parser("types", help="Print the closed public type kernel")
+    artifact_prompt = subparsers.add_parser("artifact-prompt", help="Compile a compact artifact prompt and output schema without calling a provider")
+    artifact_prompt.add_argument("--request", required=True, help="Path to an artifact request JSON file")
+    artifact_prompt.add_argument("--text", action="store_true", help="Print only the model-facing prompt")
+    artifact_check = subparsers.add_parser("artifact-check", help="Gate candidate responses against consumer shape and source checks")
+    artifact_check.add_argument("--request", required=True, help="Path to an artifact request JSON file")
+    artifact_check.add_argument("--response", required=True, action="append", help="Response file; repeat once for a replacement attempt")
+    subparsers.add_parser("benchmark-suite", help="Print the provider-neutral governance benchmark")
+    benchmark_score = subparsers.add_parser("benchmark-score", help="Score an adapter-neutral evaluation trace set")
+    benchmark_score.add_argument("--traces", required=True, help="Path to an evaluation trace-set JSON file")
+    benchmark_audit = subparsers.add_parser("benchmark-audit", help="Mutation-test the governance scorer")
+    benchmark_audit.add_argument("--traces", required=True, help="Path to a conformant trace-set JSON file")
+    subparsers.add_parser("experiment-plan", help="Print the preregistered matched behavioral comparison")
+    subparsers.add_parser("experiment-rubric", help="Print normalized behavioral metric definitions and methods")
+    subparsers.add_parser("experiment-canary", help="Exercise behavioral comparison math with synthetic measurements")
+    experiment_score = subparsers.add_parser("experiment-score", help="Score matched behavioral observations")
+    experiment_score.add_argument("--observations", required=True, help="Path to behavioral-observations JSON")
     _add_plan_arguments(subparsers.add_parser("orient", help="Print the first-run orientation docket without writing"))
     _add_plan_arguments(subparsers.add_parser("plan", help="Print a deterministic no-write bootstrap plan"))
     _add_plan_arguments(subparsers.add_parser("render", help="Print proposed file contents without writing them"))
@@ -77,6 +103,18 @@ def _print_receipt(receipt: dict, success_states: set[str] | None = None) -> int
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.command in {"artifact-prompt", "artifact-check"}:
+        try:
+            request = strict_json(Path(args.request).read_text(encoding="utf-8"))
+            if args.command == "artifact-prompt":
+                result = compile_request(request)
+                print(result["prompt"] if args.text else json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+                return 0
+            attempts = [Path(path).read_text(encoding="utf-8") for path in args.response]
+            result = evaluate_attempts(request, attempts)
+        except (OSError, UnicodeError, ValueError, RecursionError) as error:
+            raise SystemExit(str(error)) from error
+        return _print_receipt(result, {"valid-candidate"})
     if args.command == "profiles":
         print(json.dumps(list(core8_profiles()), ensure_ascii=False, indent=2, sort_keys=True))
         return 0
@@ -86,6 +124,46 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "types":
         print(json.dumps(type_kernel(), ensure_ascii=False, indent=2, sort_keys=True))
         return 0
+    if args.command == "benchmark-suite":
+        print(json.dumps(benchmark_suite(), ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
+    if args.command == "benchmark-score":
+        try:
+            trace_set = json.loads(Path(args.traces).read_text(encoding="utf-8"))
+            if not isinstance(trace_set, dict):
+                raise ValueError("evaluation trace set must be a JSON object")
+            receipt = score_trace_set(trace_set)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+            raise SystemExit(str(error)) from error
+        return _print_receipt(receipt, {"passed"})
+    if args.command == "benchmark-audit":
+        try:
+            trace_set = json.loads(Path(args.traces).read_text(encoding="utf-8"))
+            if not isinstance(trace_set, dict):
+                raise ValueError("evaluation trace set must be a JSON object")
+            receipt = audit_governance_scorer(trace_set)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+            raise SystemExit(str(error)) from error
+        return _print_receipt(receipt, {"passed"})
+    if args.command == "experiment-plan":
+        print(json.dumps(behavioral_experiment_plan(), ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
+    if args.command == "experiment-rubric":
+        print(json.dumps(behavioral_rubric(), ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
+    if args.command == "experiment-canary":
+        plan = behavioral_experiment_plan()
+        receipt = score_behavioral_experiment(synthetic_behavioral_observations(plan), plan)
+        return _print_receipt(receipt, {"canary-only"})
+    if args.command == "experiment-score":
+        try:
+            observations = json.loads(Path(args.observations).read_text(encoding="utf-8"))
+            if not isinstance(observations, dict):
+                raise ValueError("behavioral observations must be a JSON object")
+            receipt = score_behavioral_experiment(observations)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:
+            raise SystemExit(str(error)) from error
+        return _print_receipt(receipt, {"estimated", "partial-estimate", "canary-only"})
     if args.command == "verify":
         return _print_receipt(verify_install(args.workspace))
     if args.command == "package-verify":

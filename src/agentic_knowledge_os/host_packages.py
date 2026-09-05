@@ -15,6 +15,7 @@ from .compiler import (
     content_digest,
     object_digest,
 )
+from .evaluation import behavioral_experiment_plan, behavioral_rubric, benchmark_suite
 
 
 PACKAGE_HOSTS = ("hermes", "pi")
@@ -54,6 +55,11 @@ def _package_files(host: str, profile_ids: list[str]) -> list[str]:
         f"{REFERENCE_ROOT}/core8.json",
         f"{REFERENCE_ROOT}/type-kernel.json",
         f"{REFERENCE_ROOT}/operating-policy.json",
+        f"{REFERENCE_ROOT}/compact-runtime-contract.md",
+        f"{REFERENCE_ROOT}/artifact-request.schema.json",
+        f"{REFERENCE_ROOT}/governance-benchmark.json",
+        f"{REFERENCE_ROOT}/behavioral-experiment.json",
+        f"{REFERENCE_ROOT}/behavioral-rubric.json",
         f"{REFERENCE_ROOT}/host-contract.json",
         *(
             f"{REFERENCE_ROOT}/profiles/{identifier.removeprefix('akos.core8.')}.md"
@@ -177,6 +183,10 @@ Read `references/core8.json` to identify the matching attention signal and admis
 
 Read `references/type-kernel.json` when a transformation, relation, state transition, or machine-readable record is needed. Read `references/operating-policy.json` when semantic orientation, Operational Intelligence, or an effect gate materially changes the result.
 
+## Evaluation
+
+Read `references/governance-benchmark.json` only when evaluating routing and policy adherence. Read `references/behavioral-experiment.json` and `references/behavioral-rubric.json` before a matched comparison of structured role-vocabulary prompting, constitution-only prompting, and the full AKOS package. The structured baseline includes the common response schema and role identifiers but no AKOS governance or profile contracts. Record adapter-neutral evidence and score it with the source distribution. A policy-conformance score, fixture replay, behavioral estimate, or byte digest does not establish universal usefulness, semantic correctness, safety, or causality.
+
 ## Host boundary
 
 Read `references/host-contract.json` before proposing host integration. A package being discoverable does not authorize installation, enablement, profile changes, provider configuration, credentials, network use, or publication.
@@ -269,6 +279,17 @@ def compile_host_package(plan: dict[str, Any]) -> dict[str, str]:
         f"{REFERENCE_ROOT}/core8.json": portable[".akos/core8.json"],
         f"{REFERENCE_ROOT}/type-kernel.json": portable[".akos/type-kernel.json"],
         f"{REFERENCE_ROOT}/operating-policy.json": portable[".akos/operating-policy.json"],
+        f"{REFERENCE_ROOT}/compact-runtime-contract.md": files(DATA_PACKAGE).joinpath("compact-runtime-contract.md").read_text(encoding="utf-8"),
+        f"{REFERENCE_ROOT}/artifact-request.schema.json": files(DATA_PACKAGE).joinpath("artifact-request.schema.json").read_text(encoding="utf-8"),
+        f"{REFERENCE_ROOT}/governance-benchmark.json": json.dumps(
+            benchmark_suite(), ensure_ascii=False, indent=2, sort_keys=True
+        ) + "\n",
+        f"{REFERENCE_ROOT}/behavioral-experiment.json": json.dumps(
+            behavioral_experiment_plan(), ensure_ascii=False, indent=2, sort_keys=True
+        ) + "\n",
+        f"{REFERENCE_ROOT}/behavioral-rubric.json": json.dumps(
+            behavioral_rubric(), ensure_ascii=False, indent=2, sort_keys=True
+        ) + "\n",
         f"{REFERENCE_ROOT}/host-contract.json": portable[f".akos/host/{host}.json"],
     }
     for profile_id in plan["profiles"]:

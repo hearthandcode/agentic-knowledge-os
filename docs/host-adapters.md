@@ -8,7 +8,7 @@ The neutral bundle contains `brain.json`, `AGENTS.md`, the selected Core8 record
 
 Hermes can load a root-to-working-directory `AGENTS.md` chain. Its project context discovery gives `.hermes.md` or `HERMES.md` priority over the `AGENTS.md` family, so the default adapter emits only `AGENTS.md`.
 
-The host-package compiler emits a portable Agent Plugins v1 directory rooted at `plugin.json`. The package exposes `skills/agentic-knowledge-os/SKILL.md`; its referenced constitution, orientation, Core8 profiles, type kernel, operating policy, and host contract live under that skill's `references/` directory. No MCP server, executable, tool, or hook is registered.
+The host-package compiler emits a portable Agent Plugins v1 directory rooted at `plugin.json`. The package exposes `skills/agentic-knowledge-os/SKILL.md`; its referenced constitution, orientation, Core8 profiles, type kernel, operating policy, governance suite, behavioral experiment and rubric, and host contract live under that skill's `references/` directory. No MCP server, executable, tool, or hook is registered.
 
 Hermes Agent v0.21.0's real `plugins doctor --ci` accepted the generated package and discovered its skill. This establishes compatibility with that observed parser and discovery path only. Generate and inspect the package before any installation:
 

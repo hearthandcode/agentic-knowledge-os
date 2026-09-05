@@ -28,6 +28,7 @@ Each profile declares:
 - a typed domain and codomain;
 - preconditions and invariants;
 - named failure returns;
+- four public RFC rules with conditions, requirement levels, failure returns, and evidence checks;
 - one owned outcome;
 - non-triggers and non-owner boundaries;
 - a falsifier;
@@ -35,6 +36,12 @@ Each profile declares:
 - a return contract.
 
 This makes role selection inspectable. A role runs only when its admission test is satisfied. If the source, owner, scope, type, or gate is absent, the role returns a diagnostic or bounded hold instead of producing a plausible substitute.
+
+The shared contract procedure is `orient -> select-profile -> admit-inputs -> apply-rules -> transform -> validate-outputs -> check-effects -> return`. The return names the input and output type references, every applied rule ID, failed guards, performed and unperformed effects, and the next human decision. Unknown input or rule state holds with a diagnostic.
+
+Select the primary role by the requested terminal artifact. Default to no handoffs; include only necessary transformations or a future sequence expressly requested in a plan. Optional consultation stays separate. A completed report may describe an unresolved subject, and a completed proposal may await later acceptance. Supply the actual requested artifact content and request a human decision only when a human choice blocks that requested outcome. In-response reporting is an output; consequential filesystem, runtime, external and semantic-acceptance transitions are effects.
+
+These clarifications were exercised in the [v6 remediation evaluation](evaluation-result-v6.md). Full AKOS passed 13 of 24 governed trials and did not meet the qualification threshold. The result motivates further consumer-shape and source-identity work; it does not establish the fleet's effectiveness.
 
 ## Semantic orientation across Core8
 
@@ -64,6 +71,8 @@ The most important seams are deliberate:
 - Coordinator composes handoffs; it does not become a super-role.
 
 These separations are safeguards against a single fluent agent silently moving from interpretation to implementation to self-approval.
+
+The same seams are adversarial boundaries. Embedded source instructions cannot broaden context access; undeclared fields cannot smuggle defaults into a schema; a design proposal cannot impersonate accepted implementation scope; and a reviewer cannot turn authorship into permission to self-approve.
 
 ## Public-source relationship
 

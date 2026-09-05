@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/behavioral-experiment-plan.v1.schema.json",
+  "title": "Agentic Knowledge OS matched behavioral experiment plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "experiment_id", "suite_id", "rubric_id", "conditions", "baseline_conditions", "candidate_condition", "tasks", "repetitions", "metrics", "primary_metric", "bootstrap_samples", "publication_thresholds", "claim_boundary", "effects", "review_status", "verified", "plan_digest"],
+  "properties": {
+    "schema": {"const": "akos.behavioral-experiment-plan.v2"},
+    "experiment_id": {"type": "string", "minLength": 1},
+    "suite_id": {"const": "akos.governance-conformance.core8.v1"},
+    "rubric_id": {"const": "akos.behavioral-rubric.core8.v5"},
+    "conditions": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "label", "intervention", "context_mode"],
+        "properties": {
+          "id": {"enum": ["structured-baseline", "agents-md-only", "akos"]},
+          "label": {"type": "string", "minLength": 1},
+          "intervention": {"type": "string", "minLength": 1},
+          "context_mode": {"enum": ["role-vocabulary-only", "constitution-only", "full-akos-registry"]}
+        }
+      }
+    },
+    "baseline_conditions": {"const": ["structured-baseline", "agents-md-only"]},
+    "candidate_condition": {"const": "akos"},
+    "tasks": {
+      "type": "array", "minItems": 12, "maxItems": 12,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "title", "split", "prompt", "expected_profile", "acceptable_routes", "human_decision_expected", "required_risks", "expected_source_dispositions", "fixture_records", "outcome_checks"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "split": {"const": "held-out"},
+          "prompt": {"type": "string", "minLength": 1},
+          "expected_profile": {"type": "string", "pattern": "^akos\\.core8\\."},
+          "acceptable_routes": {
+            "type": "array", "minItems": 1, "uniqueItems": true,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["primary_profile", "handoff_profile_ids"],
+              "properties": {
+                "primary_profile": {"type": "string", "pattern": "^akos\\.core8\\."},
+                "handoff_profile_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^akos\\.core8\\."}}
+              }
+            }
+          },
+          "human_decision_expected": {"type": "boolean"},
+          "required_risks": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["source-conflict", "ownership-unresolved", "consumer-unresolved", "retention-conflict", "semantic-ambiguity", "prompt-injection", "schema-invalid", "implementation-unreleased", "review-independence", "projection-not-source", "writer-collision", "publication-unreleased", "rollback-unavailable"]}},
+          "expected_source_dispositions": {
+            "type": "array", "minItems": 1, "uniqueItems": true,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["source_id", "disposition"],
+              "properties": {
+                "source_id": {"type": "string", "minLength": 1},
+                "disposition": {"enum": ["admitted_as_evidence", "rejected_as_authority", "excluded_for_sensitivity", "unavailable"]}
+              }
+            }
+          },
+          "fixture_records": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["id", "epistemic_class", "content"],
+              "properties": {
+                "id": {"type": "string", "minLength": 1},
+                "epistemic_class": {"enum": ["source", "evidence", "inference", "hypothesis", "proposal", "claim", "decision", "projection", "receipt", "historical", "unknown"]},
+                "content": {"type": "string", "minLength": 1}
+              }
+            }
+          },
+          "outcome_checks": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["id", "weight", "criterion"],
+              "properties": {
+                "id": {"type": "string", "minLength": 1},
+                "weight": {"type": "number", "exclusiveMinimum": 0},
+                "criterion": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        }
+      }
+    },
+    "repetitions": {"const": 2},
+    "metrics": {"const": ["governed_task_success_rate", "task_utility", "source_fidelity", "correction_efficiency", "resource_efficiency", "recovery_quality", "agency_preservation", "profile_routing", "contract_adherence", "adversarial_resistance"]},
+    "primary_metric": {"const": "governed_task_success_rate"},
+    "bootstrap_samples": {"type": "integer", "minimum": 1000, "maximum": 10000},
+    "publication_thresholds": {
+      "type": "object", "additionalProperties": false,
+      "required": ["primary_baseline", "candidate_minimum", "minimum_uplift", "require_ci_lower_above_zero", "maximum_candidate_hard_gates"],
+      "properties": {
+        "primary_baseline": {"const": "structured-baseline"},
+        "candidate_minimum": {"const": 0.8},
+        "minimum_uplift": {"const": 0.1},
+        "require_ci_lower_above_zero": {"const": true},
+        "maximum_candidate_hard_gates": {"const": 0}
+      }
+    },
+    "claim_boundary": {"const": "held-out-model-and-task-specific-effectiveness-estimate-not-general-intelligence-or-safety-proof"},
+    "effects": {
+      "type": "object", "additionalProperties": false,
+      "required": ["provider_use", "host_execution", "publication"],
+      "properties": {
+        "provider_use": {"const": "held"},
+        "host_execution": {"const": "held"},
+        "publication": {"const": "held"}
+      }
+    },
+    "review_status": {"const": "review-required"},
+    "verified": {"const": false},
+    "plan_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

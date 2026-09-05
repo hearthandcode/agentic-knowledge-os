@@ -16,6 +16,14 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/evaluate_alpha.py
 
 The evaluation is provider-free and temporary. It exercises deterministic planning, exact-confirmation workspace creation, byte-drift verification, manifest-owned removal, and preservation of a simulated user-owned knowledge file.
 
+Audit the governance scorer and comparative experiment arithmetic separately:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/evaluate_harness.py
+```
+
+This runs 13 mutation probes and a synthetic three-condition behavioral canary. The audit measures defect detection and comparison arithmetic only; it deliberately returns real-world effectiveness as `not-measured`.
+
 ## Generate native packages
 
 Choose a new or empty review directory and run:
@@ -30,7 +38,7 @@ The generator creates:
 - `hermes-agentic-knowledge-os/`, rooted at Agent Plugins v1 `plugin.json` and containing `skills/agentic-knowledge-os/SKILL.md`;
 - `pi-agentic-knowledge-os/`, rooted at `package.json` and containing the same skill plus `prompts/orient-extended-mind.md`.
 
-Neither package contains a `.akos` directory. The portable `.akos` representation remains available for workspace generation, while host packages surface equivalent governed material through ordinary skill and prompt paths.
+Neither package contains a `.akos` directory. Both include the governance suite and preregistered behavioral experiment and rubric alongside their role references. The portable `.akos` representation remains available for workspace generation, while host packages surface equivalent governed material through ordinary skill and prompt paths.
 
 ## Observed compatibility
 
@@ -41,8 +49,8 @@ These checks establish parser, discovery, and isolated package-install behavior 
 
 ## Release boundary
 
-The source release does not install or enable a live Hermes plugin, change normal Pi settings, configure a provider, access credentials, use the network, accept a person's meaning, publish an artifact, or implement the held Exocore bridge. Installation and enablement remain explicit, separate user decisions.
+The source release does not install or enable a live Hermes plugin, change normal Pi settings, automatically configure a provider, read credential material, accept a person's meaning, publish an artifact, or implement the held Exocore bridge. The optional Promptfoo runner can call MiniMax-M3 only after an exact run request, an explicit provider confirmation, and a fail-closed authentication check; API-key and official `mmx` OAuth routes remain separately owned. Installation, authentication, evaluation, and publication remain explicit, separate user decisions.
 
 ## Release status
 
-The repository and baseline `main` branch exist. The host-package changes and this documentation are a local release candidate until their reviewed commit is pushed and a GitHub prerelease or tag is separately published. Use the [public release checklist](public-release-checklist.md) before announcing availability.
+The repository carries the host-package implementation, compact artifact gate and [v7 development report](evaluation-result-v7.md), with a [replayable evidence projection](../evals/results/v7/README.md). Source availability on `main` is separate from a version tag or GitHub prerelease. No production-readiness claim follows from the development benchmark. Use the [public release checklist](public-release-checklist.md) before announcing availability.

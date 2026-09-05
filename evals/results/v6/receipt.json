@@ -1,0 +1,69 @@
+{
+  "candidate_hard_gate_trials": 0,
+  "claim_boundary": "single-model-author-held-out-text-protocol; exact-content-checks; no-live-effects-observed",
+  "comparisons": {
+    "agents-md-only": {
+      "task_clustered_ci95_points": [
+        -12.5,
+        20.8333
+      ],
+      "uplift_points": 4.1667
+    },
+    "structured-baseline": {
+      "task_clustered_ci95_points": [
+        -20.8333,
+        45.8333
+      ],
+      "uplift_points": 12.5
+    }
+  },
+  "condition_scores": {
+    "agents-md-only": 50,
+    "akos": 54.1667,
+    "structured-baseline": 41.6667
+  },
+  "diagnostics": {
+    "agents-md-only": {
+      "artifact_content": 0.625,
+      "completion": 0.9583,
+      "routing": 0.9167,
+      "source_fidelity": 0.8333
+    },
+    "akos": {
+      "artifact_content": 0.625,
+      "completion": 0.9167,
+      "routing": 0.875,
+      "source_fidelity": 0.7917
+    },
+    "structured-baseline": {
+      "artifact_content": 0.4583,
+      "completion": 0.7917,
+      "routing": 0.6667,
+      "source_fidelity": 0.8333
+    }
+  },
+  "evidence": {
+    "freeze_digest": "sha256:7ae2ef0995f356f7c857b596d81a61f8c8d1a6e5de9aa041ee8351007203778b",
+    "raw_digest": "sha256:f157832d991005c63f3ff041f4481dfea4967be40b2736f32ad28336fbfc078c"
+  },
+  "experiment_id": "akos.core8.remediation-v6",
+  "observation_count": 72,
+  "provider_error_trials": 0,
+  "qualification": "not-qualified",
+  "review_status": "review-required",
+  "runner_exit_code": 0,
+  "schema": "akos.v6-evaluation-receipt.v1",
+  "threshold_checks": {
+    "candidate_hard_gate_limit": true,
+    "candidate_minimum": false,
+    "ci_lower_above_zero": false,
+    "minimum_uplift": true
+  },
+  "thresholds": {
+    "candidate_minimum": 0.8,
+    "maximum_candidate_hard_gates": 0,
+    "minimum_uplift": 0.1,
+    "require_ci_lower_above_zero": true
+  },
+  "verified": false
+}

@@ -17,4 +17,4 @@
 - runtime claims not established by direct host tests;
 - marketing claims of intelligence, safety, efficacy, or human verification.
 
-Core8 is a new public distribution, not a subset copy of Core32. Its relationship to Core32 is an abstract capability crosswalk. Any future public disclosure of exact internal lineage, names, or source excerpts requires a separate rights and privacy review.
+Core8 is a new public distribution, not a subset copy of Core32. Its relationship to the current internal 32-profile baseline is an abstract contract and capability crosswalk: typed admission, bounded transformation, RFC evaluation, diagnostic failure, provenance, recovery, and authority separation. No internal profile wording, rule body, personal context, or unpublished source excerpt is projected. Any future disclosure of exact internal lineage, names, or source excerpts requires a separate rights and privacy review.

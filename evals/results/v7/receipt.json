@@ -1,0 +1,73 @@
+{
+  "exploratory_targets": {
+    "interval_positive": true,
+    "minimum_80": true,
+    "uplift_10_points": true,
+    "zero_compact_contamination": true
+  },
+  "limits": "Twelve author-known synthetic tasks, one repetition; no routing, live-host or broad intelligence claim.",
+  "metrics": {
+    "agents-md-only": {
+      "calls": 13,
+      "contaminated": 0,
+      "elapsed_seconds": 17.238438640983077,
+      "final_gate": 11,
+      "final_rate": 0.9166666666666666,
+      "final_success": 11,
+      "first_gate": 10,
+      "first_rate": 0.8333333333333334,
+      "first_success": 10,
+      "held": 1,
+      "provider_error": 0,
+      "trials": 12
+    },
+    "compact-akos": {
+      "calls": 13,
+      "contaminated": 0,
+      "elapsed_seconds": 16.282520097971428,
+      "final_gate": 12,
+      "final_rate": 0.9166666666666666,
+      "final_success": 11,
+      "first_gate": 11,
+      "first_rate": 0.8333333333333334,
+      "first_success": 10,
+      "held": 0,
+      "provider_error": 0,
+      "trials": 12
+    },
+    "structured-baseline": {
+      "calls": 12,
+      "contaminated": 0,
+      "elapsed_seconds": 14.71058195704245,
+      "final_gate": 9,
+      "final_rate": 0.5,
+      "final_success": 6,
+      "first_gate": 9,
+      "first_rate": 0.5,
+      "first_success": 6,
+      "held": 3,
+      "provider_error": 0,
+      "trials": 12
+    }
+  },
+  "paired_compact_minus_baseline": {
+    "final_success": {
+      "difference": 0.4166666666666667,
+      "interval_95": [
+        0.16666666666666666,
+        0.6666666666666666
+      ]
+    },
+    "first_success": {
+      "difference": 0.3333333333333333,
+      "interval_95": [
+        0,
+        0.6666666666666666
+      ]
+    }
+  },
+  "schema": "akos.v7-result.v1",
+  "status": "complete-development-comparison",
+  "total_calls": 38,
+  "verified": false
+}

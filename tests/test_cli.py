@@ -12,6 +12,51 @@ from agentic_knowledge_os.cli import main
 
 
 class CliTests(unittest.TestCase):
+    def test_compact_artifact_commands(self) -> None:
+        fixtures = Path(__file__).resolve().parents[1] / 'fixtures/evaluation'
+        request = str(fixtures / 'compact-artifact-request.json')
+        compiled = self._run('artifact-prompt', '--request', request)
+        self.assertLess(compiled['kernel_characters'], 3000)
+        invalid = str(fixtures / 'compact-artifact-invalid.json')
+        valid = str(fixtures / 'compact-artifact-valid.json')
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(['artifact-check', '--request', request, '--response', invalid])
+        self.assertEqual(code, 2)
+        rejected = json.loads(output.getvalue())
+        self.assertIsNone(rejected['artifact_candidate'])
+        self.assertEqual(rejected['attempts'][0]['checks_applied'], [])
+        repaired = self._run('artifact-check', '--request', request,
+                             '--response', invalid, '--response', valid)
+        self.assertFalse(repaired['first_attempt_passed'])
+        self.assertEqual(len(repaired['attempts'][1]['checks_applied']), 4)
+
+    def test_benchmark_commands(self) -> None:
+        suite = self._run("benchmark-suite")
+        self.assertEqual(len(suite["cases"]), 8)
+        receipt = self._run(
+            "benchmark-score",
+            "--traces",
+            str(Path(__file__).resolve().parents[1] / "fixtures/evaluation/conformant-traces.json"),
+        )
+        self.assertEqual(receipt["status"], "passed")
+        self.assertEqual(receipt["effectiveness"]["status"], "not-measured")
+        audit = self._run(
+            "benchmark-audit",
+            "--traces",
+            str(Path(__file__).resolve().parents[1] / "fixtures/evaluation/conformant-traces.json"),
+        )
+        self.assertEqual(audit["detection_score"], 1.0)
+
+    def test_behavioral_experiment_commands(self) -> None:
+        plan = self._run("experiment-plan")
+        self.assertEqual(plan["candidate_condition"], "akos")
+        rubric = self._run("experiment-rubric")
+        self.assertEqual(rubric["aggregation"], "single-conjunctive-primary-endpoint-with-disaggregated-secondary-metrics")
+        receipt = self._run("experiment-canary")
+        self.assertEqual(receipt["status"], "canary-only")
+        self.assertEqual(receipt["scoring_model"]["composite_score"], "prohibited")
+
     def test_policy_types_and_orientation_commands_are_read_only(self) -> None:
         policy = self._run("policy")
         self.assertEqual(policy["schema"], "akos.operating-policy.v1")

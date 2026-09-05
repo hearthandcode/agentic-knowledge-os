@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/promptfoo-run-manifest.v5.schema.json",
+  "title": "Agentic Knowledge OS Promptfoo run manifest v5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "experiment_id",
+    "plan_digest",
+    "model",
+    "auth_mode",
+    "credential_material",
+    "promptfoo_config_digest",
+    "scorer",
+    "frozen_sources",
+    "expected_rows",
+    "effects",
+    "review_status",
+    "verified"
+  ],
+  "properties": {
+    "schema": {"const": "akos.promptfoo-run-manifest.v5"},
+    "experiment_id": {"const": "akos.behavioral.core8.publication-v5"},
+    "plan_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "model": {"const": "MiniMax-M3"},
+    "auth_mode": {"enum": ["api-key", "oauth"]},
+    "credential_material": {"const": "excluded"},
+    "promptfoo_config_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "scorer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "digest"],
+      "properties": {
+        "id": {"const": "akos.promptfoo-scorer.v5"},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "frozen_sources": {
+      "type": "object",
+      "additionalProperties": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+      "required": ["assertions.cjs", "minimax_oauth_provider.py", "behavioral-experiment-v5.json", "behavioral-rubric-v5.json"]
+    },
+    "expected_rows": {"const": 72},
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_call", "workspace_write", "sharing", "publication"],
+      "properties": {
+        "provider_call": {"const": "exact-confirmation-required"},
+        "workspace_write": {"const": "isolated-output-only"},
+        "sharing": {"const": "disabled"},
+        "publication": {"const": "held"}
+      }
+    },
+    "review_status": {"const": "review-required"},
+    "verified": {"const": false}
+  }
+}

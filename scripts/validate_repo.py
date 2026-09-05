@@ -26,6 +26,19 @@ from agentic_knowledge_os.host_packages import (  # noqa: E402
     build_host_package_plan,
     compile_host_package,
 )
+from agentic_knowledge_os.evaluation import (  # noqa: E402
+    audit_governance_scorer,
+    behavioral_experiment_plan,
+    behavioral_rubric,
+    benchmark_suite,
+    score_behavioral_experiment,
+    score_trace_set,
+    synthetic_behavioral_observations,
+    validate_behavioral_observations,
+    validate_trace_set,
+)
+from agentic_knowledge_os.promptfoo import promptfoo_bundle, promptfoo_config  # noqa: E402
+from agentic_knowledge_os.benchmark_v6 import load_plan as load_v6_plan  # noqa: E402
 
 
 TEXT_SUFFIXES = {".md", ".py", ".json", ".toml", ".txt"}
@@ -45,6 +58,7 @@ def fail(message: str) -> None:
 
 
 def main() -> int:
+    load_v6_plan(ROOT / 'src/agentic_knowledge_os/data/behavioral-experiment-v6.json')
     for path in sorted(ROOT.rglob("*.json")):
         if ".git" in path.parts:
             continue
@@ -78,9 +92,58 @@ def main() -> int:
             fail(f"profile references an unknown type: {profile['id']}")
         if not set(profile["handoff_to"]).issubset(profile_ids - {profile['id']}):
             fail(f"profile handoff graph is open or self-referential: {profile['id']}")
+        if profile.get("contract_version") != "akos.profile-contract.v1" or len(profile.get("rfc_rules", [])) != 4:
+            fail(f"profile contract or RFC inventory is incomplete: {profile['id']}")
     policy = operating_policy()
     if policy["semantic_orientation"]["canonical_meaning_default"] is not None:
         fail("semantic orientation defaults canonical meaning")
+
+    suite = benchmark_suite()
+    traces = json.loads((ROOT / "fixtures/evaluation/conformant-traces.json").read_text(encoding="utf-8"))
+    conformance = score_trace_set(traces, suite)
+    if conformance["status"] != "passed" or conformance["conformance_score"] != 1.0:
+        fail("governance benchmark conformant canary did not pass")
+    if conformance["effectiveness"]["status"] != "not-measured":
+        fail("governance benchmark overclaims effectiveness")
+    if conformance["artifact_identity_ledger"]["claim_limit"] != "byte-identity-only":
+        fail("evaluation identity ledger claim boundary changed")
+    audit = audit_governance_scorer(traces)
+    if audit["status"] != "passed" or audit["detection_score"] != 1.0:
+        fail("governance scorer mutation audit did not detect every probe")
+    experiment = behavioral_experiment_plan()
+    if experiment["rubric_id"] != behavioral_rubric()["rubric_id"]:
+        fail("behavioral experiment and rubric identities differ")
+    behavioral = score_behavioral_experiment(synthetic_behavioral_observations(experiment), experiment)
+    if behavioral["status"] != "canary-only" or behavioral["effectiveness"]["status"] != "not-measured":
+        fail("behavioral math canary overclaims effectiveness")
+    if behavioral["scoring_model"]["composite_score"] != "prohibited":
+        fail("behavioral evaluation introduced a compensating composite score")
+    invalid_behavioral = json.loads(
+        (ROOT / "fixtures/evaluation/invalid-behavioral-observations.json").read_text(encoding="utf-8")
+    )
+    try:
+        validate_behavioral_observations(invalid_behavioral, experiment)
+    except ValueError:
+        pass
+    else:
+        fail("invalid behavioral observations fixture was accepted")
+    for auth_mode in ("api-key", "oauth"):
+        promptfoo = promptfoo_config(auth_mode)
+        if len(promptfoo["tests"]) != 72 or promptfoo.get("sharing") is not False:
+            fail(f"Promptfoo {auth_mode} config is incomplete or shareable")
+        serialized_promptfoo = json.dumps(promptfoo)
+        if "MINIMAX_API_KEY" in serialized_promptfoo or '"apiKey"' in serialized_promptfoo:
+            fail(f"Promptfoo {auth_mode} config contains credential material or a credential field")
+        bundle = promptfoo_bundle(auth_mode)
+        if set(bundle) != {"assertions.cjs", "minimax_oauth_provider.py", "behavioral-experiment-v5.json", "behavioral-rubric-v5.json", "promptfooconfig.json", "run-manifest.json"}:
+            fail(f"Promptfoo {auth_mode} bundle inventory changed")
+    negative = json.loads((ROOT / "fixtures/evaluation/invalid-missing-case.json").read_text(encoding="utf-8"))
+    try:
+        validate_trace_set(negative, suite)
+    except ValueError:
+        pass
+    else:
+        fail("invalid evaluation trace fixture was accepted")
 
     valid_fixture = json.loads((ROOT / "fixtures/valid/brain.json").read_text(encoding="utf-8"))
     invalid_fixture = json.loads((ROOT / "fixtures/invalid/unknown-profile.json").read_text(encoding="utf-8"))
@@ -125,6 +188,12 @@ def main() -> int:
             fail(f"{host} package contains a portable .akos path")
         if "skills/agentic-knowledge-os/SKILL.md" not in package:
             fail(f"{host} package skill is missing")
+        if "skills/agentic-knowledge-os/references/governance-benchmark.json" not in package:
+            fail(f"{host} package governance benchmark is missing")
+        if "skills/agentic-knowledge-os/references/behavioral-experiment.json" not in package:
+            fail(f"{host} package behavioral experiment plan is missing")
+        if "skills/agentic-knowledge-os/references/behavioral-rubric.json" not in package:
+            fail(f"{host} package behavioral rubric is missing")
         if package_plan["effects"]["host_installation"] != "held":
             fail(f"{host} package plan does not hold installation")
     pi_manifest = json.loads(host_packages["pi"]["package.json"])
@@ -145,7 +214,7 @@ def main() -> int:
         "{{ROUTING_QUESTION}}", "{{ADMISSION_TEST}}", "{{TRANSFORMATION_ID}}",
         "{{DOMAIN}}", "{{CODOMAIN}}", "{{PRECONDITIONS}}", "{{INVARIANTS}}",
         "{{FAILURE_RETURNS}}", "{{OWNED_OUTCOME}}", "{{NON_TRIGGERS}}",
-        "{{BOUNDARIES}}", "{{FALSIFIER}}", "{{HANDOFFS}}",
+        "{{BOUNDARIES}}", "{{FALSIFIER}}", "{{HANDOFFS}}", "{{RFC_RULES}}",
     ):
         if placeholder not in profile_template:
             fail(f"profile template missing {placeholder}")
@@ -158,7 +227,7 @@ def main() -> int:
         if placeholder not in orientation_template:
             fail(f"orientation template missing {placeholder}")
 
-    if "AKOS-RFC-0001.5" not in template or "AKOS-RFC-0001.10" not in template:
+    if any(f"AKOS-RFC-0001.{index}" not in template for index in (5, 10, 16, 17)):
         fail("workspace constitution lacks typed or operational-intelligence clauses")
 
     software_license = (ROOT / "LICENSE").read_text(encoding="utf-8")
@@ -181,6 +250,12 @@ def main() -> int:
         fail("README does not distinguish source-available from open source")
     if "scripts/evaluate_alpha.py" not in readme:
         fail("README does not expose the provider-free alpha evaluation")
+    if "scripts/evaluate_governance.py" not in readme:
+        fail("README does not expose the provider-free governance benchmark")
+    if "scripts/evaluate_harness.py" not in readme:
+        fail("README does not expose the evaluation harness audit")
+    if "scripts/run_promptfoo.py" not in readme or "MiniMax-M3" not in readme:
+        fail("README does not expose the optional MiniMax-M3 Promptfoo runner")
     if "scripts/generate_host_packages.py" not in readme:
         fail("README does not expose host-native package generation")
 
@@ -206,7 +281,7 @@ def main() -> int:
     if len(compact_lines) != 1 or len(compact_lines[0]) != 256:
         fail("compact announcement is not exactly one 256-character line")
 
-    print("PASS: alpha inventory, JSON, typed Core8, semantic policy, license split, host-native packages, determinism, lifecycle boundaries, evaluation surface, and public-safety checks")
+    print("PASS: alpha inventory, JSON, typed Core8, semantic policy, governance benchmark, scorer mutation audit, matched behavioral canary, secret-free Promptfoo configs, byte-identity ledger, license split, host-native packages, determinism, lifecycle boundaries, evaluation surface, and public-safety checks")
     return 0
 
 

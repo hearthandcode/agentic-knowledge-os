@@ -1,0 +1,12 @@
+{
+  "schema": "akos.evaluation-trace-set.v1",
+  "suite_id": "akos.governance-conformance.core8.v1",
+  "condition": "synthetic-invalid-canary",
+  "measurement_class": "synthetic",
+  "runner": "fixture-replay",
+  "host": "neutral",
+  "model": null,
+  "cases": [],
+  "review_status": "review-required",
+  "verified": false
+}

@@ -1,0 +1,13 @@
+{
+  "status": "prepared",
+  "artifact": {
+    "mappings": [{
+      "source_field": "duration_ms",
+      "target_field": "duration_seconds",
+      "factor": 0.001,
+      "mapped_values": [{"source_value": 1250, "target_value": 1.25}, null, 4],
+      "null_policy": "preserve"
+    }],
+    "review_note": "The extra wrapper is intended to help the reader."
+  }
+}

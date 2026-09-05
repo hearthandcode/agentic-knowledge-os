@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/behavioral-evaluation-receipt.v1.schema.json",
+  "title": "Agentic Knowledge OS matched behavioral evaluation receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "experiment_id", "rubric_id", "measurement_class", "status", "gate_status", "hard_gate_failures", "candidate_hard_gate_failures", "integrity_failures", "candidate_integrity_failures", "headline", "comparisons", "generalization_check", "effectiveness", "scoring_model", "artifact_identity_ledger", "claim_boundary", "review_status", "verified"],
+  "properties": {
+    "schema": {"const": "akos.behavioral-evaluation-receipt.v1"},
+    "experiment_id": {"type": "string", "minLength": 1},
+    "rubric_id": {"const": "akos.behavioral-rubric.core8.v5"},
+    "measurement_class": {"enum": ["synthetic", "runner-observed"]},
+    "status": {"enum": ["canary-only", "partial-estimate", "estimated", "blocked"]},
+    "gate_status": {"enum": ["clear", "blocked"]},
+    "hard_gate_failures": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "candidate_hard_gate_failures": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "integrity_failures": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "candidate_integrity_failures": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "headline": {
+      "type": "object", "additionalProperties": false,
+      "required": ["metric", "formula", "condition_scores", "primary_baseline", "candidate_uplift_points", "task_clustered_ci95_points", "candidate_trials", "publication_thresholds", "threshold_checks", "publication_qualification"],
+      "properties": {
+        "metric": {"const": "governed_task_success_rate"},
+        "formula": {"type": "string", "minLength": 1},
+        "condition_scores": {"type": "object", "additionalProperties": false, "required": ["structured-baseline", "agents-md-only", "akos"], "properties": {"structured-baseline": {"type": "number", "minimum": 0, "maximum": 100}, "agents-md-only": {"type": "number", "minimum": 0, "maximum": 100}, "akos": {"type": "number", "minimum": 0, "maximum": 100}}},
+        "primary_baseline": {"const": "structured-baseline"},
+        "candidate_uplift_points": {"type": "number", "minimum": -100, "maximum": 100},
+        "task_clustered_ci95_points": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number", "minimum": -100, "maximum": 100}},
+        "candidate_trials": {"const": 24},
+        "publication_thresholds": {"type": "object"},
+        "threshold_checks": {"type": "object", "additionalProperties": false, "required": ["candidate_minimum", "minimum_uplift", "ci_lower_above_zero", "candidate_hard_gate_limit"], "properties": {"candidate_minimum": {"type": "boolean"}, "minimum_uplift": {"type": "boolean"}, "ci_lower_above_zero": {"type": "boolean"}, "candidate_hard_gate_limit": {"type": "boolean"}}},
+        "publication_qualification": {"enum": ["canary-only", "qualified-pending-human-review", "not-qualified"]}
+      }
+    },
+    "comparisons": {
+      "type": "object", "additionalProperties": false,
+      "required": ["structured-baseline", "agents-md-only"],
+      "properties": {
+        "structured-baseline": {"$ref": "#/$defs/comparison"},
+        "agents-md-only": {"$ref": "#/$defs/comparison"}
+      }
+    },
+    "generalization_check": {
+      "type": "object", "additionalProperties": false,
+      "required": ["calibration", "held-out"],
+      "properties": {
+        "calibration": {"$ref": "#/$defs/split"},
+        "held-out": {"$ref": "#/$defs/split"}
+      }
+    },
+    "effectiveness": {
+      "type": "object", "additionalProperties": false, "required": ["status", "reason"],
+      "properties": {
+        "status": {"enum": ["not-measured", "not-eligible", "qualified-pending-human-review", "not-qualified"]},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "scoring_model": {
+      "type": "object", "additionalProperties": false,
+      "required": ["composite_score", "comparison", "uncertainty", "primary_metric"],
+      "properties": {
+        "composite_score": {"const": "prohibited"},
+        "comparison": {"const": "paired-candidate-minus-baseline"},
+        "uncertainty": {"const": "deterministic-task-clustered-nonparametric-bootstrap-ci95"},
+        "primary_metric": {"const": "governed_task_success_rate"}
+      }
+    },
+    "artifact_identity_ledger": {"$ref": "#/$defs/ledger"},
+    "claim_boundary": {"const": "held-out-model-and-task-specific-effectiveness-estimate-not-general-intelligence-or-safety-proof"},
+    "review_status": {"const": "review-required"},
+    "verified": {"const": false}
+  },
+  "$defs": {
+    "metricResult": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "baseline_mean", "candidate_mean", "mean_delta", "bootstrap_ci95", "wins", "ties", "losses", "paired_observations", "task_clusters"],
+      "properties": {
+        "status": {"const": "measured"},
+        "baseline_mean": {"type": "number", "minimum": 0, "maximum": 1},
+        "candidate_mean": {"type": "number", "minimum": 0, "maximum": 1},
+        "mean_delta": {"type": "number", "minimum": -1, "maximum": 1},
+        "bootstrap_ci95": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number", "minimum": -1, "maximum": 1}},
+        "wins": {"type": "integer", "minimum": 0},
+        "ties": {"type": "integer", "minimum": 0},
+        "losses": {"type": "integer", "minimum": 0},
+        "paired_observations": {"type": "integer", "minimum": 1}
+        ,"task_clusters": {"type": "integer", "minimum": 1}
+      }
+    },
+    "heldMetricResult": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reason", "paired_observations"],
+      "properties": {
+        "status": {"const": "not-measured"},
+        "reason": {"type": "string", "minLength": 1},
+        "paired_observations": {"const": 0}
+      }
+    },
+    "comparison": {
+      "type": "object", "additionalProperties": false, "required": ["metrics"],
+      "properties": {
+        "metrics": {
+          "type": "object", "additionalProperties": false,
+          "required": ["governed_task_success_rate", "task_utility", "source_fidelity", "correction_efficiency", "resource_efficiency", "recovery_quality", "agency_preservation", "profile_routing", "contract_adherence", "adversarial_resistance"],
+          "properties": {
+            "governed_task_success_rate": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "task_utility": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "source_fidelity": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "correction_efficiency": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "resource_efficiency": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "recovery_quality": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "agency_preservation": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "profile_routing": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "contract_adherence": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]},
+            "adversarial_resistance": {"oneOf": [{"$ref": "#/$defs/metricResult"}, {"$ref": "#/$defs/heldMetricResult"}]}
+          }
+        }
+      }
+    },
+    "split": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "primary_metric", "baseline_condition", "mean_delta", "bootstrap_ci95", "paired_observations", "task_clusters"],
+          "properties": {
+            "status": {"const": "measured"},
+            "primary_metric": {"const": "governed_task_success_rate"},
+            "baseline_condition": {"const": "structured-baseline"},
+            "mean_delta": {"type": "number", "minimum": -1, "maximum": 1},
+            "bootstrap_ci95": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number", "minimum": -1, "maximum": 1}},
+            "paired_observations": {"type": "integer", "minimum": 1},
+            "task_clusters": {"type": "integer", "minimum": 1}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "primary_metric", "baseline_condition", "reason", "paired_observations"],
+          "properties": {
+            "status": {"const": "not-measured"},
+            "primary_metric": {"const": "governed_task_success_rate"},
+            "baseline_condition": {"const": "structured-baseline"},
+            "reason": {"type": "string", "minLength": 1},
+            "paired_observations": {"const": 0}
+          }
+        }
+      ]
+    },
+    "ledger": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "subject", "algorithm", "entries", "claim_limit", "review_status", "verified", "ledger_digest"],
+      "properties": {
+        "schema": {"const": "akos.artifact-identity-ledger.v1"},
+        "subject": {"type": "string", "minLength": 1},
+        "algorithm": {"const": "sha256"},
+        "entries": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["locator", "byte_length", "digest"],
+            "properties": {
+              "locator": {"type": "string", "minLength": 1},
+              "byte_length": {"type": "integer", "minimum": 0},
+              "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+            }
+          }
+        },
+        "claim_limit": {"const": "byte-identity-only"},
+        "review_status": {"const": "review-required"},
+        "verified": {"const": false},
+        "ledger_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

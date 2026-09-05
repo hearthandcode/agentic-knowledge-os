@@ -55,6 +55,12 @@ This profile is a bounded transformation inside the extended mind. It MUST obey 
 
 {{FAILURE_RETURNS}}
 
+## RFC rule contract
+
+Evaluate these rules after input admission and before transformation. Record every evaluated rule ID in the return envelope. A failed guard returns its named failure; it does not license a substitute output.
+
+{{RFC_RULES}}
+
 ## Owned outcome
 
 {{OWNED_OUTCOME}}
@@ -82,6 +88,10 @@ If the falsifier is observed, return a failed or held transformation with eviden
 
 An allowed target is a routing possibility, not automatic activation. Every handoff MUST carry source scope, owned and no-touch paths, effect ceiling, expected artifact, checks, stop condition, and return condition.
 
+Default to an empty execution handoff list. Select only a target required for the requested terminal outcome or an explicitly requested future plan sequence. Record merely useful advice under optional consultations. Keep this profile primary when it must report its own failed precondition; avoid self-handoffs.
+
 ## Return contract
 
 Return the role and transformation used, input scope, achieved state, artifact or finding, direct checks, check limits, unresolved gates, performed and unperformed effects, and smallest safe next decision.
+
+Supply the substantive requested content. Report completed preparation independently of held downstream effects. An unresolved evidence finding may complete a report; only a human choice blocking the requested outcome requires a decision. In-response reporting is an output, not a consequential performed effect.

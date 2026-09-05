@@ -46,11 +46,14 @@
     "governance": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["normative_terms", "precedence", "independent_gates", "fail_closed_on", "validation_limit"],
+      "required": ["normative_terms", "precedence", "independent_gates", "bounded_completion", "source_dispositions", "routing_contract", "fail_closed_on", "validation_limit"],
       "properties": {
         "normative_terms": {"type": "object"},
         "precedence": {"type": "array", "minItems": 1, "items": {"type": "string"}},
         "independent_gates": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "string"}, "uniqueItems": true},
+        "bounded_completion": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+        "source_dispositions": {"const": ["admitted_as_evidence", "rejected_as_authority", "excluded_for_sensitivity", "unavailable"]},
+        "routing_contract": {"type": "string", "minLength": 1},
         "fail_closed_on": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
         "validation_limit": {"type": "string"}
       }

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/evaluation-receipt.v1.schema.json",
+  "title": "Agentic Knowledge OS policy-conformance receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "suite_id", "condition", "measurement_class", "runner", "host", "model", "case_count", "case_results", "axis_scores", "conformance_score", "gate_status", "hard_gate_failures", "threshold_passed", "status", "effectiveness", "artifact_identity_ledger", "review_status", "verified"],
+  "properties": {
+    "schema": {"const": "akos.evaluation-receipt.v1"},
+    "suite_id": {"type": "string"},
+    "condition": {"type": "string"},
+    "measurement_class": {"enum": ["synthetic", "runner-observed"]},
+    "runner": {"type": "string"},
+    "host": {"type": "string"},
+    "model": {"type": ["string", "null"]},
+    "case_count": {"const": 8},
+    "case_results": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["case_id", "governance_refs", "expected_profile", "axis_results", "score"],
+        "properties": {
+          "case_id": {"type": "string"},
+          "governance_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "expected_profile": {"type": "string", "pattern": "^akos\\.core8\\."},
+          "axis_results": {"$ref": "#/$defs/axisBooleans"},
+          "score": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "axis_scores": {"$ref": "#/$defs/axisNumbers"},
+    "conformance_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "gate_status": {"enum": ["clear", "blocked"]},
+    "hard_gate_failures": {"type": "array", "items": {"type": "string"}},
+    "threshold_passed": {"type": "boolean"},
+    "status": {"enum": ["passed", "failed"]},
+    "effectiveness": {
+      "type": "object", "additionalProperties": false, "required": ["status", "reason"],
+      "properties": {"status": {"const": "not-measured"}, "reason": {"type": "string", "minLength": 1}}
+    },
+    "artifact_identity_ledger": {"$ref": "#/$defs/ledger"},
+    "review_status": {"const": "review-required"},
+    "verified": {"const": false}
+  },
+  "$defs": {
+    "axisNumbers": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy_adherence", "profile_routing", "provenance", "effect_boundaries", "return_quality"],
+      "properties": {
+        "policy_adherence": {"type": "number", "minimum": 0, "maximum": 1},
+        "profile_routing": {"type": "number", "minimum": 0, "maximum": 1},
+        "provenance": {"type": "number", "minimum": 0, "maximum": 1},
+        "effect_boundaries": {"type": "number", "minimum": 0, "maximum": 1},
+        "return_quality": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "axisBooleans": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy_adherence", "profile_routing", "provenance", "effect_boundaries", "return_quality"],
+      "properties": {
+        "policy_adherence": {"type": "boolean"},
+        "profile_routing": {"type": "boolean"},
+        "provenance": {"type": "boolean"},
+        "effect_boundaries": {"type": "boolean"},
+        "return_quality": {"type": "boolean"}
+      }
+    },
+    "ledger": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "subject", "algorithm", "entries", "claim_limit", "review_status", "verified", "ledger_digest"],
+      "properties": {
+        "schema": {"const": "akos.artifact-identity-ledger.v1"},
+        "subject": {"type": "string", "minLength": 1},
+        "algorithm": {"const": "sha256"},
+        "entries": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["locator", "byte_length", "digest"],
+            "properties": {
+              "locator": {"type": "string", "minLength": 1},
+              "byte_length": {"type": "integer", "minimum": 0},
+              "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+            }
+          }
+        },
+        "claim_limit": {"const": "byte-identity-only"},
+        "review_status": {"const": "review-required"},
+        "verified": {"const": false},
+        "ledger_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

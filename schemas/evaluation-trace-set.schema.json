@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hearthandcode.example/agentic-knowledge-os/evaluation-trace-set.v1.schema.json",
+  "title": "Agentic Knowledge OS adapter-neutral evaluation traces v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "suite_id", "condition", "measurement_class", "runner", "host", "model", "cases", "review_status", "verified"],
+  "properties": {
+    "schema": {"const": "akos.evaluation-trace-set.v1"},
+    "suite_id": {"type": "string", "minLength": 1},
+    "condition": {"type": "string", "minLength": 1},
+    "measurement_class": {"enum": ["synthetic", "runner-observed"]},
+    "runner": {"type": "string", "minLength": 1},
+    "host": {"type": "string", "minLength": 1},
+    "model": {"type": ["string", "null"]},
+    "cases": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["case_id", "selected_profile", "events", "epistemic_classes", "status", "evidence_refs", "unauthorized_effects"],
+        "properties": {
+          "case_id": {"type": "string", "minLength": 1},
+          "selected_profile": {"type": "string", "minLength": 1},
+          "events": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "epistemic_classes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "status": {"type": "string", "minLength": 1},
+          "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "unauthorized_effects": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "review_status": {"const": "review-required"},
+    "verified": {"const": false}
+  }
+}

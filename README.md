@@ -19,6 +19,12 @@ That makes the project useful as a legible operating layer around ordinary files
 
 ## Evaluate it in one command
 
+For schema-bound artifact work, the optional [compact operational contract](docs/compact-artifact-contract.md) uses one role and a local content gate. It rejects invalid shapes and declared source-value mismatches, with at most one repair attempt. Enforcement checks alone do not establish higher model effectiveness.
+
+The [v7 development comparison](docs/evaluation-result-v7.md) measured 11/12 post-repair task successes for compact AKOS and constitution-only, versus 6/12 for the structured baseline. Compact prompts were smaller, but the twelve-task run does not establish broad effectiveness or an advantage over the constitution alone.
+
+The [supporting evidence bundle](evals/results/v7/README.md) includes frozen prompts, raw responses and scoring code. Replay it without a provider using `python scripts/verify_public_v7.py`.
+
 Requires Python 3.11 or newer. Clone the repository and run:
 
 ```bash
@@ -28,6 +34,22 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/evaluate_alpha.py
 The evaluation uses a disposable temporary directory. It plans and renders a complete workspace, applies the reviewed plan, verifies manifest-owned bytes, adds a simulated user-owned note, uninstalls the generated control layer, and checks that the note survived. It makes no network request and does not configure a host.
 
 The expected final result is `"status": "passed"`. See the [evaluation guide](docs/evaluation-guide.md) for the exact predicates and limitations.
+
+Run the separate governance scorer canary with:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/evaluate_governance.py
+```
+
+It replays one conformant trace set and one deliberately prohibited semantic-acceptance event. A passing canary shows that the rubric accepts the former, blocks the latter, and keeps effectiveness marked `not-measured`; it does not show that a live model or host behaves effectively.
+
+Audit the complete evaluation harness with:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/evaluate_harness.py
+```
+
+This mutation-tests every governance axis and hard gate, then exercises the paired behavioral-comparison math across structured role-vocabulary, `AGENTS.md`-only, and full-AKOS conditions. Its behavioral inputs are visibly synthetic: the command evaluates the harness, not the operating system's real-world effectiveness.
 
 ## First-release path
 
@@ -62,6 +84,9 @@ For vibe-coders and AI builders, it supplies the part a fast prototype often lac
 - host-native Hermes Agent Plugins v1 and Pi package generation without a `.akos` directory;
 - exact-confirmation workspace creation with an ownership manifest;
 - drift verification, rollback, and uninstall that preserve user-created knowledge;
+- an eight-case Core8 policy-conformance benchmark and byte-identity evidence ledger;
+- a preregistered three-condition behavioral experiment with repeated calibration and held-out tasks;
+- an optional Promptfoo runner for MiniMax-M3 with API-key and official `mmx` OAuth routes;
 - valid and invalid fixtures;
 - provider-free tests and a public-safety validator.
 
@@ -80,7 +105,7 @@ Planning and rendering never write the workspace. `apply` is a separate explicit
 | Reviewer | Compare work against named criteria and preserve dissent |
 | Steward | Protect privacy, continuity, recovery, and lifecycle boundaries |
 
-These are original public adaptations of abstract capability patterns. No private Core32 profile body is copied or distributed. Core8 is a functional compression: each role has an attention signal, admission test, typed partial transformation, owned outcome, non-triggers, falsifier, and handoff seams. It is not eight always-on personalities.
+These are original public adaptations of abstract capability patterns. No private Core32 profile body is copied or distributed. Core8 is a functional compression: each role has an attention signal, closed typed partial transformation, four public RFC rules, named failure returns, owned outcome, non-triggers, falsifier, and handoff seams. It is not eight always-on personalities. Every profile reports admitted domain and codomain types, evaluated rule IDs, failed guards, and performed versus unperformed effects through a common return envelope.
 
 The portable workspace renders each selected role as `.akos/profiles/<role>.md`. Host-native packages project the same role material under `skills/agentic-knowledge-os/references/profiles/`, alongside the constitution, type kernel, operating policy, and first-run orientation. Neither form automatically creates or activates eight native host accounts.
 
@@ -92,6 +117,14 @@ You can evaluate the source directly with `PYTHONPATH=src`, or install it into a
 PYTHONPATH=src python -m agentic_knowledge_os profiles
 PYTHONPATH=src python -m agentic_knowledge_os policy
 PYTHONPATH=src python -m agentic_knowledge_os types
+PYTHONPATH=src python -m agentic_knowledge_os benchmark-suite
+PYTHONPATH=src python -m agentic_knowledge_os benchmark-score \
+  --traces fixtures/evaluation/conformant-traces.json
+PYTHONPATH=src python -m agentic_knowledge_os benchmark-audit \
+  --traces fixtures/evaluation/conformant-traces.json
+PYTHONPATH=src python -m agentic_knowledge_os experiment-plan
+PYTHONPATH=src python -m agentic_knowledge_os experiment-rubric
+PYTHONPATH=src python -m agentic_knowledge_os experiment-canary
 PYTHONPATH=src python -m agentic_knowledge_os orient \
   --name "Example Brain" \
   --workspace /tmp/example-brain \
@@ -144,7 +177,7 @@ The output contains:
 - `hermes-agentic-knowledge-os/`: an Agent Plugins v1 package rooted at `plugin.json` with a discoverable `skills/agentic-knowledge-os/SKILL.md`;
 - `pi-agentic-knowledge-os/`: a Pi package rooted at `package.json`, providing the same skill plus `/orient-extended-mind` as a prompt template.
 
-Neither package contains a `.akos` directory. Both carry the constitution, orientation, Core8 profiles, type kernel, operating policy, host contract, license, notices, and a digest manifest under ordinary host-package paths. Generation writes only to a new or empty output directory and does not install or enable either package.
+Neither package contains a `.akos` directory. Both carry the constitution, orientation, Core8 profiles, type kernel, operating policy, governance benchmark, behavioral experiment plan and rubric, host contract, license, notices, and a digest manifest under ordinary host-package paths. Generation writes only to a new or empty output directory and does not install or enable either package.
 
 For a single reviewed package, use the exact-confirmation flow exposed by `package-plan`, `package-render`, `package-apply`, and `package-verify`. See [Host adapters](docs/host-adapters.md) for integration commands and present compatibility evidence.
 
@@ -155,7 +188,41 @@ For a single reviewed package, use the exact-confirmation flow exposed by `packa
 - **Pi:** can emit a package rooted at `package.json` with one Agent Skill and one orientation prompt template. Generation does not change Pi settings or project trust.
 - **Exocore:** emits a held interface projection only. Runtime bridge implementation waits for an accepted Exocore-owned interface.
 
-See [Evaluation guide](docs/evaluation-guide.md), [Core8 orientation](docs/core8-orientation.md), [Refined Agentic OS design](docs/refined-agentic-os.md), [Architecture](docs/architecture.md), [Phase 2 lifecycle](docs/phase-2-lifecycle.md), [Host adapters](docs/host-adapters.md), and [Source boundary](docs/source-boundary.md).
+## Optional observed MiniMax-M3 comparison
+
+The [v6 remediation protocol](docs/evaluation-v6.md) adds substantive artifact checks, minimal routing, and typed effects through a separate frozen runner. Its [first frozen result](docs/evaluation-result-v6.md) was 54.17/100 for full AKOS, 50/100 for the constitution alone and 41.67/100 for the structured baseline, with no candidate hard gates. It did not meet qualification. V6 scores are not directly comparable with v5. The v5 tooling below remains a historical protocol; current source changes do not reproduce the original frozen v5 intervention.
+
+The provider-free canaries remain the default. The optional Promptfoo v5 publication-candidate adapter runs a frozen 72-row matched comparison against the same MiniMax-M3 model across a structured role-vocabulary baseline, `AGENTS.md`-only, and full-AKOS conditions: twelve new held-out tasks × three conditions × two repetitions. The first condition is not an ordinary unconstrained prompt: it receives the common output schema and Core8 role identifiers, but no AKOS constitution, operating policy, or profile contracts. V5 tests bounded upstream completion, typed source dispositions, exact primary-plus-ordered-handoff routes, and the distinction between preparing a candidate and performing its held effect. It reports one conjunctive Governed Task Success Rate alongside disaggregated secondary metrics, not a blended intelligence score.
+
+The first frozen v5 MiniMax-M3 OAuth run completed all 72 calls but did **not** qualify for publication effectiveness: AKOS scored 12.5/100 against 0/100 for the structured baseline, with a task-clustered uplift interval of 0 to 29.17 points, one candidate hard-gate classification, and only the minimum-uplift check passing. This is negative evidence, not a release claim. See the [v5 result note](docs/evaluation-result-v5.md) for the complete bounded interpretation.
+
+Prepare a secret-free run bundle without making a provider call:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/prepare_promptfoo.py \
+  --auth-mode oauth \
+  --output-root /absolute/path/to/new-run-directory
+```
+
+For MiniMax OAuth, the adapter uses the official `mmx` CLI's device authorization route; it does not read or copy tokens:
+
+```bash
+mmx auth login --recommend --region=global
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/minimax_auth.py status --mode oauth
+```
+
+The alternate `api-key` route reads only `MINIMAX_API_KEY` from the process environment through Promptfoo's native MiniMax provider. Neither route places a key or OAuth token in the generated config. After reviewing `run-manifest.json`, execute with an exact provider confirmation:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/run_promptfoo.py \
+  --auth-mode oauth \
+  --output-root /absolute/path/to/new-run-directory \
+  --confirm-provider MiniMax-M3
+```
+
+Promptfoo sharing, telemetry, update checks, remote generation, cache reuse, and concurrent calls are disabled for this runner. The raw output remains local. AKOS deterministically scores task utility, source fidelity, resource efficiency when counters exist, agency preservation, profile routing, typed contract adherence, adversarial resistance, and hard gates. Correction efficiency and recovery quality remain unmeasured until a separate protocol collects their required evidence; no composite intelligence score is produced. See [the adapter runbook](evals/promptfoo/README.md).
+
+See [Governance benchmark](docs/governance-benchmark.md), [Evaluation guide](docs/evaluation-guide.md), [Core8 orientation](docs/core8-orientation.md), [Refined Agentic OS design](docs/refined-agentic-os.md), [Architecture](docs/architecture.md), [Phase 2 lifecycle](docs/phase-2-lifecycle.md), [Host adapters](docs/host-adapters.md), and [Source boundary](docs/source-boundary.md).
 
 ## Public release preparation
 
@@ -178,4 +245,4 @@ python -m compileall -q src tests scripts
 git diff --check
 ```
 
-Passing these checks establishes source shape, deterministic planning, and the tested temporary-workspace lifecycle only. It does not establish usefulness, live-host compatibility, universal filesystem safety, or human acceptance. Those are the next evaluation questions, not implied properties of the alpha.
+Passing these checks establishes source shape, deterministic planning, scorer mutation sensitivity, comparison arithmetic, and the tested temporary-workspace lifecycle only. It does not establish usefulness, live-host compatibility, universal filesystem safety, causality, or human acceptance. Those require observed matched runs and human review.

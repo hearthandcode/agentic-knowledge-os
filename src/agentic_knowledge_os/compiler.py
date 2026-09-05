@@ -75,8 +75,35 @@ def host_adapters() -> dict[str, dict[str, Any]]:
 
 
 def _validate_distribution(distribution: dict[str, Any]) -> None:
-    if distribution.get("schema") != "akos.core8-distribution.v2":
+    if distribution.get("schema") != "akos.core8-distribution.v3":
         raise ValueError("unsupported Core8 distribution schema")
+    required_distribution = {
+        "schema", "distribution_id", "version", "authority_class", "review_status",
+        "verified", "source_relation", "contract_protocol", "profiles",
+    }
+    if set(distribution) != required_distribution:
+        raise ValueError("Core8 distribution fields are not closed")
+    protocol = distribution.get("contract_protocol")
+    protocol_fields = {
+        "schema", "input_envelope_fields", "output_envelope_fields", "rule_fields",
+        "evaluation_order", "unknown_behavior", "effect",
+    }
+    if not isinstance(protocol, dict) or set(protocol) != protocol_fields:
+        raise ValueError("profile contract protocol fields are not closed")
+    if protocol.get("schema") != "akos.profile-contract-protocol.v1":
+        raise ValueError("unsupported profile contract protocol")
+    if protocol.get("unknown_behavior") != "hold-with-diagnostic" or protocol.get("effect") != "none":
+        raise ValueError("profile contract protocol must fail closed and grant no effect")
+    expected_order = [
+        "orient", "select-profile", "admit-inputs", "apply-rules", "transform",
+        "validate-outputs", "check-effects", "return",
+    ]
+    if protocol.get("evaluation_order") != expected_order:
+        raise ValueError("profile contract evaluation order changed")
+    for field in ("input_envelope_fields", "output_envelope_fields", "rule_fields"):
+        values = protocol.get(field)
+        if not isinstance(values, list) or not values or len(values) != len(set(values)):
+            raise ValueError(f"profile contract protocol {field} must be a non-empty unique list")
     profiles = distribution.get("profiles")
     if not isinstance(profiles, list) or len(profiles) != 8:
         raise ValueError("Core8 distribution must contain exactly eight profiles")
@@ -89,8 +116,10 @@ def _validate_distribution(distribution: dict[str, Any]) -> None:
         "attention_signal",
         "routing_question",
         "admission_test",
+        "contract_version",
         "transformation",
         "owned_outcome",
+        "rfc_rules",
         "non_triggers",
         "boundaries",
         "falsifier",
@@ -115,6 +144,8 @@ def _validate_distribution(distribution: dict[str, Any]) -> None:
             raise ValueError("Core8 profiles cannot grant authority")
         if profile["verified"] is not False:
             raise ValueError("Core8 source candidates must remain unverified")
+        if profile["contract_version"] != "akos.profile-contract.v1":
+            raise ValueError(f"unsupported profile contract version: {identifier}")
         transformation = profile["transformation"]
         if set(transformation) != {"id", "domain", "codomain", "preconditions", "invariants", "failure_returns"}:
             raise ValueError(f"profile transformation fields are not closed: {identifier}")
@@ -127,6 +158,33 @@ def _validate_distribution(distribution: dict[str, Any]) -> None:
         unknown_types = set((*transformation["domain"], *transformation["codomain"])) - known_types
         if unknown_types:
             raise ValueError(f"profile references unknown types: {identifier}: {', '.join(sorted(unknown_types))}")
+        if transformation["codomain"][-1] != "ReturnEnvelope":
+            raise ValueError(f"profile codomain must terminate in ReturnEnvelope: {identifier}")
+        rules = profile["rfc_rules"]
+        rule_fields = set(protocol["rule_fields"])
+        if not isinstance(rules, list) or len(rules) != 4:
+            raise ValueError(f"profile must declare exactly four public RFC rules: {identifier}")
+        rule_ids: set[str] = set()
+        requirement_levels: set[str] = set()
+        failure_returns = set(transformation["failure_returns"])
+        for rule in rules:
+            if not isinstance(rule, dict) or set(rule) != rule_fields:
+                raise ValueError(f"profile RFC rule fields are not closed: {identifier}")
+            rule_id = rule["id"]
+            if not isinstance(rule_id, str) or not rule_id.startswith("AKOS-C8-") or rule_id in rule_ids:
+                raise ValueError(f"profile RFC rule identity is invalid: {identifier}")
+            requirement = rule["requirement_level"]
+            if requirement not in {"MUST", "MUST_NOT"}:
+                raise ValueError(f"profile RFC requirement level is invalid: {identifier}")
+            for field in ("condition", "required_behavior", "evidence_check"):
+                if not isinstance(rule[field], str) or not rule[field]:
+                    raise ValueError(f"profile RFC rule text is invalid: {identifier}")
+            if rule["failure_return"] not in failure_returns:
+                raise ValueError(f"profile RFC rule references an unknown failure return: {identifier}")
+            rule_ids.add(rule_id)
+            requirement_levels.add(requirement)
+        if requirement_levels != {"MUST", "MUST_NOT"}:
+            raise ValueError(f"profile RFC rules must include positive and prohibitive law: {identifier}")
         for field in ("non_triggers", "boundaries"):
             values = profile[field]
             if not isinstance(values, list) or not values or len(values) != len(set(values)):
@@ -216,13 +274,22 @@ def _validate_operating_policy(policy: dict[str, Any]) -> None:
     if layers != ["L1", "L2", "L3"]:
         raise ValueError("operational intelligence layers changed")
     governance = policy["governance"]
-    if set(governance) != {"normative_terms", "precedence", "independent_gates", "fail_closed_on", "validation_limit"}:
+    if set(governance) != {
+        "normative_terms", "precedence", "independent_gates", "bounded_completion",
+        "source_dispositions", "routing_contract", "fail_closed_on", "validation_limit",
+    }:
         raise ValueError("governance contract is open")
     if set(governance["normative_terms"]) != {"MUST", "MUST_NOT", "SHOULD", "MAY", "HOLD", "UNKNOWN"}:
         raise ValueError("normative term contract changed")
     gates = governance.get("independent_gates")
     if gates != ["source-intake", "semantic-acceptance", "artifact-acceptance", "local-apply", "host-activation", "external-effect"]:
         raise ValueError("independent governance gates changed")
+    if governance.get("source_dispositions") != [
+        "admitted_as_evidence", "rejected_as_authority", "excluded_for_sensitivity", "unavailable"
+    ]:
+        raise ValueError("source disposition vocabulary changed")
+    if len(governance.get("bounded_completion", [])) != 4 or not governance.get("routing_contract"):
+        raise ValueError("bounded completion or routing contract is incomplete")
 
 
 def _normalized_name(name: str) -> str:
@@ -478,6 +545,16 @@ def _render_profile(profile: dict[str, Any], plan: dict[str, Any]) -> str:
         "{{PRECONDITIONS}}": "\n".join(f"- {value}." for value in profile["transformation"]["preconditions"]),
         "{{INVARIANTS}}": "\n".join(f"- {value}." for value in profile["transformation"]["invariants"]),
         "{{FAILURE_RETURNS}}": "\n".join(f"- `{value}`" for value in profile["transformation"]["failure_returns"]),
+        "{{RFC_RULES}}": "\n\n".join(
+            (
+                f"### {rule['id']} — {rule['requirement_level']}\n\n"
+                f"- Condition: {rule['condition']}\n"
+                f"- Required behavior: {rule['required_behavior']}\n"
+                f"- Failure return: `{rule['failure_return']}`\n"
+                f"- Evidence check: {rule['evidence_check']}"
+            )
+            for rule in profile["rfc_rules"]
+        ),
         "{{OWNED_OUTCOME}}": profile["owned_outcome"],
         "{{NON_TRIGGERS}}": "\n".join(f"- {value}." for value in profile["non_triggers"]),
         "{{BOUNDARIES}}": "\n".join(f"- MUST NOT {value.removeprefix('does not ')}." for value in profile["boundaries"]),

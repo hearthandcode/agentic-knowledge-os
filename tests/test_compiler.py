@@ -26,6 +26,8 @@ class Core8Tests(unittest.TestCase):
         self.assertTrue(all(profile["authority_class"] == "advisory-template" for profile in profiles))
         self.assertTrue(all(profile["transformation"]["domain"] for profile in profiles))
         self.assertTrue(all(profile["transformation"]["codomain"] for profile in profiles))
+        self.assertTrue(all(len(profile["rfc_rules"]) == 4 for profile in profiles))
+        self.assertTrue(all(profile["contract_version"] == "akos.profile-contract.v1" for profile in profiles))
 
     def test_profile_types_and_handoffs_are_closed(self) -> None:
         profiles = core8_profiles()
@@ -35,6 +37,11 @@ class Core8Tests(unittest.TestCase):
             referenced = set((*profile["transformation"]["domain"], *profile["transformation"]["codomain"]))
             self.assertLessEqual(referenced, type_ids)
             self.assertLessEqual(set(profile["handoff_to"]), profile_ids - {profile["id"]})
+            self.assertEqual(profile["transformation"]["codomain"][-1], "ReturnEnvelope")
+            self.assertEqual(
+                {rule["requirement_level"] for rule in profile["rfc_rules"]},
+                {"MUST", "MUST_NOT"},
+            )
 
     def test_operating_policy_separates_layers_and_gates(self) -> None:
         policy = operating_policy()
@@ -70,10 +77,13 @@ class Core8Tests(unittest.TestCase):
         self.assertFalse(any(path.endswith(".hermes.md") for path in bundle))
         self.assertIn("Hermes Brain", bundle["AGENTS.md"])
         self.assertIn("## Transformation contract", bundle[".akos/profiles/coordinator.md"])
+        self.assertIn("## RFC rule contract", bundle[".akos/profiles/coordinator.md"])
         self.assertIn("## Return contract", bundle[".akos/profiles/coordinator.md"])
         self.assertIn("First-run orientation", bundle[".akos/ORIENTATION.md"])
         self.assertIn(".akos/type-kernel.json", bundle)
         self.assertIn(".akos/operating-policy.json", bundle)
+        self.assertIn("AKOS-RFC-0001.16", bundle["AGENTS.md"])
+        self.assertIn("AKOS-RFC-0001.17", bundle["AGENTS.md"])
 
     def test_pi_projection_is_contract_only(self) -> None:
         plan = build_plan(name="Pi Brain", workspace="/workspace/pi", host="pi")

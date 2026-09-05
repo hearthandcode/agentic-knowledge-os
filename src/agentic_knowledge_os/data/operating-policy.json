@@ -43,6 +43,9 @@
     },
     "precedence": ["current human instruction", "safety consent privacy and authorship", "named direct source", "workspace constitution", "narrower local law", "proposal or projection"],
     "independent_gates": ["source-intake", "semantic-acceptance", "artifact-acceptance", "local-apply", "host-activation", "external-effect"],
+    "bounded_completion": ["complete authorized upstream transformations and include substantive requested artifact content, not only a filename", "hold only the dependent unreleased transition; a completed report may describe an unresolved subject", "request a human decision only when a human choice blocks the requested terminal outcome", "report in-response outputs separately from consequential filesystem, runtime, external or semantic-acceptance effects"],
+    "source_dispositions": ["admitted_as_evidence", "rejected_as_authority", "excluded_for_sensitivity", "unavailable"],
+    "routing_contract": "Select the specialist owning the requested terminal artifact, including a named precondition finding. Coordinator owns requested routing plans; Steward owns retention and recovery; Builder owns implementation candidates. Default to no handoffs. Only necessary transformations or explicitly requested future plan sequences belong in ordered handoffs. Optional advice belongs in consultations. Allowed targets never imply required handoffs or activation.",
     "fail_closed_on": ["authority", "owner", "source identity", "sensitivity", "route", "permission", "cost", "irreversibility", "transition"],
     "validation_limit": "A check establishes only its declared predicate; it does not establish acceptance, meaning, safety, usefulness, or runtime efficacy."
   },

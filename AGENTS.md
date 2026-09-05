@@ -8,7 +8,7 @@ Hermes, Pi, and Exocore remain independent hosts. This repository may describe a
 
 ## Current implementation boundary
 
-The current authorization includes downstream source implementation for host-native package projections. Local source creation, deterministic tests, generated-output inspection, package-doctor checks, and installation-lifecycle tests inside isolated temporary profiles and workspaces are permitted. The source may expose gated local workspace and package writes, but this authorization does not apply either output to a person's live workspace or host profile.
+The current authorization includes downstream source implementation for host-native package projections and a provider-free governance and behavioral-evaluation harness. Local source creation, deterministic tests, generated-output inspection, package-doctor checks, fixture-replay scoring, scorer mutation audits, synthetic matched-comparison checks, and installation-lifecycle tests inside isolated temporary profiles and workspaces are permitted. The source may expose gated local workspace and package writes, but this authorization does not apply either output to a person's live workspace or host profile.
 
 The following remain held unless separately authorized:
 
@@ -40,6 +40,13 @@ The following remain held unless separately authorized:
 - Planning remains the default operation. Applying requires an exact reviewed plan ID, an empty or already-owned target, and a manifest-owned rollback path.
 - Install manifests may own only generated control files. They never own user-created sources, knowledge, decisions, evidence, projects, workflows, receipts, or archive content.
 - Verify reports byte identity for manifest-owned files only. It does not establish semantic quality, live-host compatibility, or human acceptance.
+- Artifact identity ledgers prove only the named artifacts' exact bytes under the stated digest algorithm. They do not prove meaning, provenance truth, acceptance, currency, or effectiveness.
+- Governance benchmark scores measure only the declared checks against recorded traces. Any hard-gate violation blocks conformance regardless of the average score.
+- Synthetic fixture replay is a scorer canary, not evidence that a model, host, or installed system follows the policy in practice.
+- Evaluation runners and orchestration frameworks are replaceable adapters; they do not own the rubric, evidence boundary, or release claim.
+- Behavioral evaluation must compare frozen structured role-vocabulary, constitution-only, and full-AKOS conditions through complete task-condition-repetition pairs. The structured baseline is not an ordinary unconstrained prompt and must not be described as one.
+- Report metric vectors and paired uncertainty independently. A composite effectiveness or intelligence score is prohibited because it can conceal regressions and encode unreviewed value judgments.
+- Calibration and held-out results remain separate. Synthetic values evaluate harness arithmetic only; runner-observed values remain estimates pending source review and human disposition.
 - No command may infer consent, personal meaning, diagnosis, credentials, or provider configuration.
 - Host-package generation never implies package installation, profile placement, enablement, or project trust.
 - No generated profile may broaden filesystem, network, Git, publication, or runtime authority.
