@@ -77,7 +77,7 @@ class Core8Tests(unittest.TestCase):
 
     def test_pi_projection_is_contract_only(self) -> None:
         plan = build_plan(name="Pi Brain", workspace="/workspace/pi", host="pi")
-        self.assertEqual(plan["adapter"]["status"], "contract-only-live-untested")
+        self.assertEqual(plan["adapter"]["status"], "pi-package-isolated-install-passed-live-uninstalled")
         self.assertEqual(plan["adapter"]["runtime_effect"], "held")
 
     def test_exocore_projection_remains_held(self) -> None:

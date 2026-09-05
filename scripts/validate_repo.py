@@ -22,9 +22,13 @@ from agentic_knowledge_os.compiler import (  # noqa: E402
     validate_brain,
     validate_plan,
 )
+from agentic_knowledge_os.host_packages import (  # noqa: E402
+    build_host_package_plan,
+    compile_host_package,
+)
 
 
-TEXT_SUFFIXES = {".md", ".py", ".json", ".toml"}
+TEXT_SUFFIXES = {".md", ".py", ".json", ".toml", ".txt"}
 FORBIDDEN_TEXT = (
     "/" + "home/",
     "cosma" + "trexis",
@@ -106,6 +110,30 @@ def main() -> int:
         if plan["effects"][effect] != "held":
             fail(f"downstream effect is not held: {effect}")
 
+    host_packages: dict[str, dict[str, str]] = {}
+    for host, native_manifest in (("hermes", "plugin.json"), ("pi", "package.json")):
+        package_plan = build_host_package_plan(
+            name="Validation Package",
+            output_root=f"/packages/{host}",
+            host=host,
+        )
+        package = compile_host_package(package_plan)
+        host_packages[host] = package
+        if native_manifest not in package:
+            fail(f"{host} native package manifest is missing")
+        if any(path.startswith(".akos") or "/.akos" in path for path in package):
+            fail(f"{host} package contains a portable .akos path")
+        if "skills/agentic-knowledge-os/SKILL.md" not in package:
+            fail(f"{host} package skill is missing")
+        if package_plan["effects"]["host_installation"] != "held":
+            fail(f"{host} package plan does not hold installation")
+    pi_manifest = json.loads(host_packages["pi"]["package.json"])
+    if pi_manifest.get("pi") != {"skills": ["./skills"], "prompts": ["./prompts"]}:
+        fail("Pi package resources changed")
+    hermes_manifest = json.loads(host_packages["hermes"]["plugin.json"])
+    if hermes_manifest.get("$schema") != "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json":
+        fail("Hermes Agent Plugins schema changed")
+
     template = (SRC / "agentic_knowledge_os" / "data" / "workspace-agents.template.md").read_text(encoding="utf-8")
     for placeholder in ("{{BRAIN_NAME}}", "{{PLAN_ID}}", "{{HOST}}", "{{CORE8_ROLES}}"):
         if placeholder not in template:
@@ -136,6 +164,9 @@ def main() -> int:
     software_license = (ROOT / "LICENSE").read_text(encoding="utf-8")
     if not software_license.startswith("PolyForm Noncommercial License 1.0.0\n"):
         fail("software license is not PolyForm Noncommercial 1.0.0")
+    packaged_license = (SRC / "agentic_knowledge_os" / "data" / "software-license.txt").read_text(encoding="utf-8")
+    if packaged_license != software_license:
+        fail("generated-package license bytes differ from the repository license")
     package_metadata = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     if 'license = "PolyForm-Noncommercial-1.0.0"' not in package_metadata:
         fail("package metadata and software license differ")
@@ -150,14 +181,32 @@ def main() -> int:
         fail("README does not distinguish source-available from open source")
     if "scripts/evaluate_alpha.py" not in readme:
         fail("README does not expose the provider-free alpha evaluation")
+    if "scripts/generate_host_packages.py" not in readme:
+        fail("README does not expose host-native package generation")
 
     package_version = 'version = "0.3.0a1"'
     if package_version not in package_metadata:
         fail("Python package version does not match the public alpha")
     if not (ROOT / "CHANGELOG.md").is_file() or not (ROOT / "docs/evaluation-guide.md").is_file():
         fail("public alpha release surface is incomplete")
+    initial_release = ROOT / "docs/initial-release.md"
+    if not initial_release.is_file():
+        fail("initial release orientation is missing")
+    release_text = initial_release.read_text(encoding="utf-8")
+    for marker in ("v0.3.0-alpha.1", "Hermes Agent v0.21.0", "Pi v0.83.0", "generate_host_packages.py"):
+        if marker not in release_text:
+            fail(f"initial release orientation is missing {marker}")
+    announcement = (ROOT / "docs/community-announcement.md").read_text(encoding="utf-8")
+    long_post = announcement.split("## Nous Research Discord — 128 words", 1)[1].split("## Compact post", 1)[0]
+    long_words = [word for line in long_post.splitlines() if line.startswith(">") for word in line[1:].split()]
+    if len(long_words) != 128:
+        fail(f"Discord announcement is {len(long_words)} words instead of 128")
+    compact_section = announcement.split("## Compact post — 256 characters", 1)[1]
+    compact_lines = [line[2:] for line in compact_section.splitlines() if line.startswith("> ")]
+    if len(compact_lines) != 1 or len(compact_lines[0]) != 256:
+        fail("compact announcement is not exactly one 256-character line")
 
-    print("PASS: alpha inventory, JSON, typed Core8, semantic policy, license split, adapter, determinism, lifecycle boundary, evaluation surface, and public-safety checks")
+    print("PASS: alpha inventory, JSON, typed Core8, semantic policy, license split, host-native packages, determinism, lifecycle boundaries, evaluation surface, and public-safety checks")
     return 0
 
 

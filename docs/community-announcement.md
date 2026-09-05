@@ -1,15 +1,22 @@
 # Community announcement
 
-## Nous Research Discord
+Use these only after the reviewed release commit is pushed, the repository is confirmed public, and the release URL renders correctly.
 
-Suggested destination: Nous Research `#hermes-agent`, or the closest project-sharing channel allowed by its current rules.
+## Nous Research Discord — 128 words
 
-> Hey Herm fans — I’ve been working with an AI coding session on an early release of Agentic Knowledge OS: a local-first, source-available starter kit for building a user-owned “extended mind” around Hermes or another agent harness.
+> Your agents deserve more than another pile of prompts. Agentic Knowledge OS is ready for its first alpha: a local-first starter kit for building a governed extended mind around Hermes, Pi, or another agent harness. It gives your agents a Core8 team, an RFC-style AGENTS.md constitution, typed knowledge routes, provenance, and hard boundaries between “make a plan” and “take an action.”
 >
-> The practical idea is to give an agent a typed Core8 fleet, an RFC-style `AGENTS.md`, durable routes for sources/decisions/evidence, and explicit gates between “make a plan” and “take an action.” There’s also a provider-free evaluation that installs the generated layer in a temporary workspace, verifies it, removes it, and checks that user-created knowledge survives.
+> This release generates native Hermes and Pi packages—no .akos layout required—and includes a provider-free evaluation, reversible workspace installation, drift checks, and user-file-safe removal.
 >
-> I think it may be useful for vibe-coders and AI builders who want to move quickly without letting prompts, memory, and permissions collapse into one opaque blob. It’s still an alpha—live Hermes/Pi activation isn’t claimed—but the source and boundaries are ready to inspect: https://github.com/hearthandcode/agentic-knowledge-os
+> If you love vibe-coding but want your AI workspace to preserve sources, uncertainty, and human authority, this is for you.
 >
-> I’d be curious: does this feel like useful scaffolding for your own agent workflows, or too legislative for the way you like to build?
+> Build fast without letting memory, permissions, and interpretation collapse into one opaque system.
+>
+> Clone it, generate your package, and tell me what breaks:
+> https://github.com/hearthandcode/agentic-knowledge-os
 
-This is a draft only. Confirm current channel rules and post manually unless message-send authority is separately granted.
+## Compact post — 256 characters
+
+> AI needs more than memory—it needs boundaries. Agentic Knowledge OS gives Hermes and Pi Core8 roles, provenance, reversible setup, plus an RFC-style constitution. Build an extended mind you can inspect: https://github.com/hearthandcode/agentic-knowledge-os
+
+Suggested Discord destination: Nous Research `#hermes-agent`, or the closest project-sharing channel allowed by its current rules. Confirm the current channel rules and post manually unless message-send authority is separately granted.

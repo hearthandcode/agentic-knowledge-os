@@ -11,19 +11,19 @@
   "hermes": {
     "schema": "akos.host-adapter.v1",
     "host": "hermes",
-    "status": "source-compatible-live-untested",
-    "instruction_surface": "AGENTS.md directory chain",
-    "projection_loss": ["profile installation", "plugin enablement", "provider configuration", "gateway lifecycle"],
-    "context_rule": "Do not emit .hermes.md alongside AGENTS.md by default because the former wins project-context discovery.",
+    "status": "agent-plugins-v1-package-doctor-passed-live-uninstalled",
+    "instruction_surface": "plugin.json plus skills/agentic-knowledge-os/SKILL.md and references",
+    "projection_loss": ["plugin installation", "plugin enablement", "profile configuration", "provider configuration", "gateway lifecycle"],
+    "context_rule": "Package skill references project AGENTS.md when present; package generation does not emit .hermes.md or modify project context.",
     "runtime_effect": "held",
     "verified": false
   },
   "pi": {
     "schema": "akos.host-adapter.v1",
     "host": "pi",
-    "status": "contract-only-live-untested",
-    "instruction_surface": "explicit profile-pack extension and skill paths",
-    "projection_loss": ["extension registration", "host configuration", "runtime compatibility proof"],
+    "status": "pi-package-isolated-install-passed-live-uninstalled",
+    "instruction_surface": "package.json declared skills/ and prompts/ resources",
+    "projection_loss": ["live settings integration", "project trust", "model-session behavior", "runtime compatibility proof"],
     "runtime_effect": "held",
     "verified": false
   },

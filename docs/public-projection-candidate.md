@@ -1,4 +1,4 @@
-# Agentic Knowledge OS — initial public design
+# Agentic Knowledge OS — initial public release candidate
 
 Agentic Knowledge OS is an early, local-first design for constructing a user-owned extended mind inside an agent harness. Instead of treating memory as an unbounded autonomous database, it treats knowledge work as typed, reviewable transformations governed by human authority.
 
@@ -10,7 +10,9 @@ Agentic Knowledge OS is an early, local-first design for constructing a user-own
 - a closed type kernel for sources, evidence, decisions, projections, gates, effects, and returns;
 - deterministic planning and rendering;
 - reversible, manifest-owned local workspace installation;
-- source-level adapter descriptions for Hermes, Pi, and a future Exocore interface.
+- a host-native Hermes Agent Plugins v1 package;
+- a host-native Pi skill and prompt package;
+- a held interface description for a future Exocore bridge.
 
 Core8 covers coordination, context selection, evidence analysis, knowledge architecture, knowledge engineering, bounded building, independent review, and lifecycle stewardship. Each role declares when it should be used, what it accepts, what it returns, what would falsify success, and which decisions it does not own.
 
@@ -23,9 +25,15 @@ Core8 covers coordination, context selection, evidence analysis, knowledge archi
 - Projections retain source identity, transformation, loss, uncertainty, review state, and no-write-back.
 - Unknown authority or sensitivity holds only the dependent effect.
 
+## Try the release candidate
+
+Run `scripts/evaluate_alpha.py` for the provider-free temporary-workspace lifecycle, then run `scripts/generate_host_packages.py` against a new or empty directory to produce separate Hermes and Pi packages. The generated host packages use native manifests and ordinary skill-reference paths; neither contains a `.akos` directory.
+
+The Hermes package passed package-doctor discovery under the observed local Hermes Agent v0.21.0 installation. The Pi package installed and appeared in `pi list` under an isolated Pi v0.83.0 profile. These are bounded compatibility observations, not claims about every host version or a live model session.
+
 ## Present limits
 
-This release candidate does not provide automatic memory acceptance, semantic-search infrastructure, provider configuration, credential handling, live host registration, or an Exocore runtime bridge. Its tests establish deterministic source behavior and disposable-workspace lifecycle predicates only; they do not establish usefulness, safety, or production compatibility.
+This release candidate does not provide automatic memory acceptance, semantic-search infrastructure, provider configuration, credential handling, live-profile activation, or an Exocore runtime bridge. Its checks establish deterministic source behavior, disposable-workspace lifecycle predicates, host-package manifest discovery, and one isolated Pi installation only; they do not establish usefulness, safety, semantic correctness, or production compatibility.
 
 ## License posture
 

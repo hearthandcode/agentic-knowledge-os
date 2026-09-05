@@ -2,12 +2,14 @@
 
 **A governed starter kit for building a user-owned extended mind with AI agents.**
 
+**Initial release candidate: `v0.3.0-alpha.1`**
+
 Agentic Knowledge OS is a host-neutral, local-first, noncommercial source-available distribution that gives an agent harness a durable way to organize knowledge work. It combines a specialized Core8 fleet, an RFC-style `AGENTS.md` constitution, explicit knowledge routes, typed operating boundaries, and a reversible installation lifecycle.
 
 It is meant for builders who enjoy the speed of vibe-coding but want the resulting system to remember where information came from, distinguish evidence from interpretation, ask before consequential effects, and leave the person's files intact.
 
 > [!IMPORTANT]
-> This repository is an alpha source distribution. Its local installer is implemented and tested only in disposable workspaces. No live Hermes, Pi, or Exocore profile has been installed, enabled, or represented as production-ready. `verified` remains `false` pending human review.
+> This repository is an alpha source distribution. Its workspace lifecycle is tested only in disposable workspaces; its generated Hermes package passed Hermes Agent v0.21.0 package-doctor discovery, and its Pi package installed under an isolated Pi v0.83.0 profile. No live user profile has been changed or enabled, and no host is represented as production-ready. `verified` remains `false` pending human review.
 
 ## Why this exists
 
@@ -26,6 +28,15 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/evaluate_alpha.py
 The evaluation uses a disposable temporary directory. It plans and renders a complete workspace, applies the reviewed plan, verifies manifest-owned bytes, adds a simulated user-owned note, uninstalls the generated control layer, and checks that the note survived. It makes no network request and does not configure a host.
 
 The expected final result is `"status": "passed"`. See the [evaluation guide](docs/evaluation-guide.md) for the exact predicates and limitations.
+
+## First-release path
+
+1. Run the provider-free evaluation above.
+2. Generate the Hermes and Pi packages into a new or empty review directory.
+3. Inspect the native manifest, shared Agent Skill, Core8 references, license, and ownership manifest.
+4. Integrate only the package for the host you actually use.
+
+The generator performs steps 2–3 without installing, enabling, configuring, or contacting either host. See [Initial release](docs/initial-release.md) for the complete release orientation and bounded integration path.
 
 ## Who it is for
 
@@ -48,6 +59,7 @@ For vibe-coders and AI builders, it supplies the part a fast prototype often lac
 - deterministic bootstrap planning and in-memory rendering;
 - a detailed RFC-style `AGENTS.md` extended-mind constitution;
 - Hermes, Pi, and Exocore adapter descriptors;
+- host-native Hermes Agent Plugins v1 and Pi package generation without a `.akos` directory;
 - exact-confirmation workspace creation with an ownership manifest;
 - drift verification, rollback, and uninstall that preserve user-created knowledge;
 - valid and invalid fixtures;
@@ -70,7 +82,7 @@ Planning and rendering never write the workspace. `apply` is a separate explicit
 
 These are original public adaptations of abstract capability patterns. No private Core32 profile body is copied or distributed. Core8 is a functional compression: each role has an attention signal, admission test, typed partial transformation, owned outcome, non-triggers, falsifier, and handoff seams. It is not eight always-on personalities.
 
-Each selected role is installed as its own `.akos/profiles/<role>.md` instruction surface. The root constitution defines RFC-style common law; `.akos/type-kernel.json` closes role inputs and outputs; `.akos/operating-policy.json` exposes semantic orientation, Operational Intelligence, and governance boundaries; and `.akos/ORIENTATION.md` guides the first human conversation. This is a portable fleet distribution, not automatic creation or activation of eight native host accounts.
+The portable workspace renders each selected role as `.akos/profiles/<role>.md`. Host-native packages project the same role material under `skills/agentic-knowledge-os/references/profiles/`, alongside the constitution, type kernel, operating policy, and first-run orientation. Neither form automatically creates or activates eight native host accounts.
 
 ## Plan and inspect
 
@@ -118,18 +130,36 @@ If you are evaluating through Hermes, Pi, Codex, or another coding harness, star
 
 The prompt asks an agent to demonstrate the system before it writes anything. The generated `.akos/ORIENTATION.md` then guides the human conversation about purpose, source ownership, meaning, sensitivity, allowed effects, and return conditions.
 
+## Generate host-native packages
+
+The portable `.akos` workspace remains available as an inspectable intermediate representation, but it is no longer the only integration surface. Generate separate native package directories for Hermes and Pi:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/generate_host_packages.py \
+  --output-root /absolute/empty/review-directory
+```
+
+The output contains:
+
+- `hermes-agentic-knowledge-os/`: an Agent Plugins v1 package rooted at `plugin.json` with a discoverable `skills/agentic-knowledge-os/SKILL.md`;
+- `pi-agentic-knowledge-os/`: a Pi package rooted at `package.json`, providing the same skill plus `/orient-extended-mind` as a prompt template.
+
+Neither package contains a `.akos` directory. Both carry the constitution, orientation, Core8 profiles, type kernel, operating policy, host contract, license, notices, and a digest manifest under ordinary host-package paths. Generation writes only to a new or empty output directory and does not install or enable either package.
+
+For a single reviewed package, use the exact-confirmation flow exposed by `package-plan`, `package-render`, `package-apply`, and `package-verify`. See [Host adapters](docs/host-adapters.md) for integration commands and present compatibility evidence.
+
 ## Host posture
 
 - **Neutral:** emits only the portable workspace contract.
-- **Hermes:** emits `AGENTS.md` plus a profile-neutral adapter descriptor. It does not emit `.hermes.md`, install a plugin, or configure a profile.
-- **Pi:** emits adapter metadata for explicit profile-pack instruction loading. It does not install or register an extension.
+- **Hermes:** can emit a portable Agent Plugins v1 skill package rooted at `plugin.json`. Generation does not install, enable, or configure a profile.
+- **Pi:** can emit a package rooted at `package.json` with one Agent Skill and one orientation prompt template. Generation does not change Pi settings or project trust.
 - **Exocore:** emits a held interface projection only. Runtime bridge implementation waits for an accepted Exocore-owned interface.
 
 See [Evaluation guide](docs/evaluation-guide.md), [Core8 orientation](docs/core8-orientation.md), [Refined Agentic OS design](docs/refined-agentic-os.md), [Architecture](docs/architecture.md), [Phase 2 lifecycle](docs/phase-2-lifecycle.md), [Host adapters](docs/host-adapters.md), and [Source boundary](docs/source-boundary.md).
 
 ## Public release preparation
 
-An [initial public projection](docs/public-projection-candidate.md), [release checklist](docs/public-release-checklist.md), [community announcement](docs/community-announcement.md), [licensing decision record](docs/licensing-model-candidate.md), and [low-cost IP baseline](docs/ip-protection-baseline.md) are available for review.
+An [initial release orientation](docs/initial-release.md), [public projection](docs/public-projection-candidate.md), [release checklist](docs/public-release-checklist.md), [community announcement](docs/community-announcement.md), [licensing decision record](docs/licensing-model-candidate.md), and [low-cost IP baseline](docs/ip-protection-baseline.md) are available for review.
 
 The selected licensing distribution is:
 

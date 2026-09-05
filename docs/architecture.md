@@ -8,17 +8,17 @@ generated orientation docket
   -> brain manifest candidate
   -> operating policy + closed type kernel
   -> deterministic bootstrap plan
-  -> portable workspace bundle
-  -> host adapter projection
+  -> portable workspace bundle OR native host-package projection
+  -> Hermes plugin package / Pi skill-and-prompt package / held Exocore contract
   -> human review
-  -> exact local installation confirmation
+  -> exact workspace or package-write confirmation
   -> ownership manifest and receipt
   -> separately released host activation or runtime effect
 ```
 
 The portable brain manifest owns the user's selected roles, workspace location, governance invariants, and held effects. It does not own source content, accepted meaning, human decisions, or host configuration.
 
-The bootstrap compiler is deliberately smaller than an agent runtime. It validates selections, computes a stable plan ID, and renders proposed bytes in memory. The separate lifecycle layer may write those reviewed bytes to a clean local target and record its exact ownership. It does not call a model, inspect credentials, activate an adapter, or choose a provider.
+The bootstrap compiler is deliberately smaller than an agent runtime. It validates selections, computes a stable plan ID, and renders proposed bytes in memory. The host-package compiler projects the same source into a Hermes Agent Plugins v1 package or a Pi package without carrying the portable `.akos` directory into either output. The separate lifecycle layers may write reviewed bytes to clean local targets and record exact ownership. They do not call a model, inspect credentials, activate an adapter, or choose a provider.
 
 ## Workspace topology
 

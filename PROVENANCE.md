@@ -11,7 +11,7 @@ The public Core8 distribution is a functional compression and original adaptatio
 - Package: `agentic-knowledge-os`
 - Release version: `0.3.0-alpha.1` (`0.3.0a1` in Python package metadata)
 - Public repository: `https://github.com/hearthandcode/agentic-knowledge-os`
-- Verification state: structural source checks only
+- Verification state: structural source checks plus bounded Hermes package discovery and isolated Pi package installation checks
 - Human verification: false
 - Live host activation: none
 

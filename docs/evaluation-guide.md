@@ -4,7 +4,7 @@
 
 The alpha evaluation demonstrates the smallest complete lifecycle that Agentic Knowledge OS currently claims: a deterministic, provider-free plan can generate a governed workspace, identify its own files, verify those exact bytes, and remove its control layer without claiming a user-created knowledge file.
 
-It is an implementation check, not a benchmark of intelligence or a live-host compatibility claim.
+It is an implementation check, not a benchmark of intelligence or a universal live-host compatibility claim.
 
 ## Run
 
@@ -64,3 +64,16 @@ PYTHONPATH=src python -m agentic_knowledge_os render \
 ```
 
 Review whether the constitution is understandable, the Core8 role boundaries are useful, the starter routes fit a real workflow, and the held effects are obvious. Those observations are more valuable at this stage than broad claims about autonomy.
+
+## Host-package evaluation
+
+Generate both native packages into a new or empty directory:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python scripts/generate_host_packages.py \
+  --output-root /absolute/empty/review-directory
+```
+
+Inspect each native manifest, `skills/agentic-knowledge-os/SKILL.md`, its bounded references, and `package-manifest.json`. Neither package should contain a `.akos` directory.
+
+The release candidate has been checked with Hermes Agent v0.21.0 `plugins doctor --ci` and installed from a local path under an isolated Pi v0.83.0 profile. Those checks demonstrate acceptance by the observed package parsers only. Testing a normal user profile, enabling the Hermes plugin, trusting a Pi project, and running a model session remain separate evaluations.

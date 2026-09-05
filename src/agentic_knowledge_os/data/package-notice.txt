@@ -1,0 +1,7 @@
+Agentic Knowledge OS
+
+Required Notice: Copyright 2026 Scott Rallya and Hearth & Code.
+
+This generated host package is a projection of the public Agentic Knowledge OS source. It does not contain or license private Core32 profile bodies, personal context, credentials, or unpublished operational material.
+
+Generation does not install or enable the package and grants no provider, network, credential, filesystem, semantic-acceptance, or external-effect authority.

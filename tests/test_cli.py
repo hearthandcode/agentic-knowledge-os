@@ -65,6 +65,43 @@ class CliTests(unittest.TestCase):
             verified = self._run("verify", "--workspace", str(parent / "mind"))
             self.assertEqual(verified["status"], "clear")
 
+    def test_host_package_plan_render_apply_and_verify_commands(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            parent = Path(temporary)
+            target = parent / "hermes-package"
+            plan = self._run(
+                "package-plan",
+                "--name",
+                "CLI Host Package",
+                "--output",
+                str(target),
+                "--host",
+                "hermes",
+            )
+            rendered = self._run(
+                "package-render",
+                "--name",
+                "CLI Host Package",
+                "--output",
+                str(target),
+                "--host",
+                "hermes",
+            )
+            self.assertEqual(rendered["plan"], plan)
+            self.assertIn("plugin.json", rendered["files"])
+            plan_file = parent / "package-plan.json"
+            plan_file.write_text(json.dumps(plan) + "\n", encoding="utf-8")
+            applied = self._run(
+                "package-apply",
+                "--plan-file",
+                str(plan_file),
+                "--confirm-package",
+                plan["package_id"],
+            )
+            self.assertEqual(applied["status"], "written")
+            verified = self._run("package-verify", "--package-root", str(target))
+            self.assertEqual(verified["status"], "clear")
+
 
 if __name__ == "__main__":
     unittest.main()

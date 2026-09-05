@@ -8,7 +8,7 @@ Hermes, Pi, and Exocore remain independent hosts. This repository may describe a
 
 ## Current implementation boundary
 
-The current authorization is downstream Phase 2 source implementation. Local source creation, deterministic tests, generated-output inspection, and installation-lifecycle tests inside disposable temporary workspaces are permitted. The source may expose a gated local apply operation, but this authorization does not apply it to a person's live workspace or host profile.
+The current authorization includes downstream source implementation for host-native package projections. Local source creation, deterministic tests, generated-output inspection, package-doctor checks, and installation-lifecycle tests inside isolated temporary profiles and workspaces are permitted. The source may expose gated local workspace and package writes, but this authorization does not apply either output to a person's live workspace or host profile.
 
 The following remain held unless separately authorized:
 
@@ -32,6 +32,8 @@ The following remain held unless separately authorized:
 ## Product invariants
 
 - The canonical portable input is `brain.json`; host outputs are projections.
+- `.akos` is the portable workspace/control representation, not a required host-package layout.
+- Hermes packages use Agent Plugins v1 `plugin.json` plus `skills/`; Pi packages use `package.json` plus declared `skills/` and `prompts/`.
 - `AGENTS.md` is the default workspace instruction surface.
 - Do not emit `.hermes.md` alongside `AGENTS.md` by default because Hermes gives the former priority over the latter instruction family.
 - Core8 profiles default disabled and provider-neutral.
@@ -39,6 +41,7 @@ The following remain held unless separately authorized:
 - Install manifests may own only generated control files. They never own user-created sources, knowledge, decisions, evidence, projects, workflows, receipts, or archive content.
 - Verify reports byte identity for manifest-owned files only. It does not establish semantic quality, live-host compatibility, or human acceptance.
 - No command may infer consent, personal meaning, diagnosis, credentials, or provider configuration.
+- Host-package generation never implies package installation, profile placement, enablement, or project trust.
 - No generated profile may broaden filesystem, network, Git, publication, or runtime authority.
 - Uninstall and rollback specifications must preserve user-created knowledge unless the user explicitly selects it for removal.
 

@@ -18,7 +18,7 @@ dependencies = []
 akos = "agentic_knowledge_os.cli:main"
 
 [tool.setuptools.package-data]
-agentic_knowledge_os = ["data/*.json", "data/*.md"]
+agentic_knowledge_os = ["data/*.json", "data/*.md", "data/*.txt"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -26,7 +26,7 @@ L2 contains the public type kernel, Core8 transformations, delegation envelopes,
 
 ### L3 — Host-projection layer
 
-L3 adapts the portable contract to a harness such as Hermes, Pi, or a future accepted Exocore interface. Every adapter declares its instruction surface, omissions, compatibility status, review state, and runtime effect. A host projection is not activation, and runtime evidence does not amend L1 automatically.
+L3 adapts the portable contract to a harness such as Hermes, Pi, or a future accepted Exocore interface. The current compiler can produce a Hermes Agent Plugins v1 skill package and a Pi skill-and-prompt package without copying the portable `.akos` directory into either output. Every adapter declares its instruction surface, omissions, compatibility status, review state, and runtime effect. A host projection is not activation, and runtime evidence does not amend L1 automatically.
 
 ## Three planes
 
@@ -38,7 +38,7 @@ The control plane may describe the effect plane but cannot authorize it. The kno
 
 ## Orientation before installation logic
 
-The installer can create control surfaces, but the person's extended mind is not initialized semantically until a human orientation occurs. The generated `.akos/ORIENTATION.md` asks for purpose, source ownership, literal-versus-interpreted boundaries, semantic mode, audience, sensitivity, allowed effects, lead role, and return conditions.
+The workspace installer can create portable control surfaces, but the person's extended mind is not initialized semantically until a human orientation occurs. The portable `.akos/ORIENTATION.md` and its host-package `skills/agentic-knowledge-os/references/orientation.md` projection ask for purpose, source ownership, literal-versus-interpreted boundaries, semantic mode, audience, sensitivity, allowed effects, lead role, and return conditions.
 
 The orientation result should be a candidate typed record. Literal answers remain separately addressable; proposed vocabulary is marked as proposal; accepted meanings require an explicit human disposition. Missing answers produce local holds, not personality inference.
 
